@@ -1,0 +1,88 @@
+{
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Buyer",
+      "description": "Send approved orders to suppliers; maintain suppliers and products"
+    },
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Full access to orders and master data"
+    },
+    {
+      "name": "$XSAPPNAME.Auditor",
+      "description": "Read-only access to all orders, approval log and master data"
+    },
+    {
+      "name": "$XSAPPNAME.Approver",
+      "description": "Approve or reject submitted purchase orders"
+    },
+    {
+      "name": "$XSAPPNAME.Requester",
+      "description": "Create, edit and submit own purchase orders"
+    },
+    {
+      "name": "$XSAPPNAME.mtcallback",
+      "description": "Subscription via SaaS Registry",
+      "grant-as-authority-to-apps": [
+        "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+      ]
+    },
+    {
+      "name": "$XSAPPNAME.cds.ExtensionDeveloper",
+      "description": "Extend CAP applications via extension projects"
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "Buyer",
+      "description": "Send approved orders to suppliers; maintain suppliers and products",
+      "scope-references": [
+        "$XSAPPNAME.Buyer"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "Admin",
+      "description": "Full access to orders and master data",
+      "scope-references": [
+        "$XSAPPNAME.Admin"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "Auditor",
+      "description": "Read-only access to all orders, approval log and master data",
+      "scope-references": [
+        "$XSAPPNAME.Auditor"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "Approver",
+      "description": "Approve or reject submitted purchase orders",
+      "scope-references": [
+        "$XSAPPNAME.Approver"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "Requester",
+      "description": "Create, edit and submit own purchase orders",
+      "scope-references": [
+        "$XSAPPNAME.Requester"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "ExtensionDeveloper",
+      "description": "Extend CAP applications via extension projects",
+      "scope-references": [
+        "$XSAPPNAME.cds.ExtensionDeveloper"
+      ]
+    }
+  ],
+  "authorities": [
+    "$XSAPPNAME.cds.ExtensionDeveloper"
+  ]
+}

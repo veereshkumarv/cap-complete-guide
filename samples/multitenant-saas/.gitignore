@@ -1,0 +1,15 @@
+# What: Files Git must not track in the multitenant sample: dependencies, build output, archives,
+#     credentials and the per-tenant SQLite databases (db-t0.sqlite, db-t1.sqlite, ... and WAL files).
+# Why: Definition of Done [CAP-S09] - tenant databases are created by subscriptions, never committed.
+# If missing or unlinked: Local tenant databases or credentials end up in Git.
+node_modules/
+gen/
+mta_archives/
+*.mtar
+default-env.json
+.cdsrc-private.json
+.env
+.env.*
+*.sqlite
+*.sqlite-*
+coverage/

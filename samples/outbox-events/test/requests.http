@@ -1,0 +1,28 @@
+# What: Sample HTTP requests for the outbox-events sample (VS Code "REST Client" / IntelliJ HTTP client).
+# Why: [CAP-M18] watch the outbox at work: confirm an order, then see invoice and booking appear.
+# If missing or unlinked: Learners have to reconstruct the URLs from the tests.
+#
+# Start first: npm run watch - the log shows the queued messages being processed.
+
+@P = http://localhost:4004/odata/v4/orders
+
+### 1 Orders
+GET {{P}}/Orders
+
+### 2 Confirm an order: status change, message and shipment booking in one transaction
+POST {{P}}/Orders(f1000000-0000-4000-8000-000000000001)/OrderService.confirm
+Content-Type: application/json
+
+{}
+
+### 3 Invoice written by the consumer of OrderService.OrderConfirmed (after commit)
+GET {{P}}/Invoices
+
+### 4 Booking written by the queued ShippingService call
+GET {{P}}/ShipmentBookings
+
+### 5 Confirm twice -> 409, no second message
+POST {{P}}/Orders(f1000000-0000-4000-8000-000000000001)/OrderService.confirm
+Content-Type: application/json
+
+{}

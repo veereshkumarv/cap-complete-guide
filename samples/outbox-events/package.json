@@ -1,0 +1,35 @@
+{
+  "//": [
+    "What: npm manifest of the outbox-events sample: CAP runtime, a queued (transactional outbox) local messaging service and a queued shipping service, SQLite for development, tests.",
+    "Why: [CAP-M07] / [CAP-M18] / [CAP-DEC-04] focused sample of reliable asynchronous processing - messages and remote calls commit or roll back with the business data and are retried until delivered.",
+    "If missing or unlinked: cds watch cannot resolve @sap/cds, messaging is not queued (no outbox), and npm test has no script."
+  ],
+  "name": "sample-outbox-events",
+  "version": "1.0.0",
+  "description": "CAP sample: transactional outbox for messages and service calls, idempotent consumers, retries and dead letters.",
+  "private": true,
+  "engines": {
+    "node": "^22 || ^24"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "dependencies": {
+    "@sap/cds": "^10"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^1",
+    "@cap-js/sqlite": "^3",
+    "@sap/cds-dk": "^10"
+  },
+  "cds": {
+    "requires": {
+      "messaging": {
+        "kind": "local-messaging",
+        "queued": true
+      }
+    }
+  }
+}

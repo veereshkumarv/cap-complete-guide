@@ -1,6 +1,6 @@
 {
   "//": [
-    "What: npm manifest of stage 01 (basics): CAP runtime, SQLite for development, cds.test for tests, and the start/watch/test scripts.",
+    "What: npm manifest of stage 03 (services): CAP runtime, SQLite for development, cds.test for tests, and the start/watch/test scripts.",
     "Why: [CAP-M01] in CAP 10, cds init no longer writes a package.json; this file makes the folder a runnable Node.js CAP project (cds add nodejs equivalent).",
     "If missing or unlinked: cds watch cannot resolve @sap/cds or the SQLite driver, npm test has no script, and the folder is no longer a project."
   ],

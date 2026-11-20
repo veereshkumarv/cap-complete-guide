@@ -1,0 +1,9 @@
+/*
+ * What: Native SAP HANA index on purchase orders (createdBy, status) - the columns of the
+ *     instance-based restriction "createdBy = $user and status = 'Draft'" from stage 06.
+ * Why: [CAP-M13] / [CAP-DEC-08] CDS cannot declare indexes; native HDI artefacts in db/src are copied
+ *     into gen/db by `cds build --production` and deployed only to HANA - SQLite never sees them.
+ * If missing or unlinked: Requesters' lists still work but scan the whole order table on HANA once
+ *     it holds many orders.
+ */
+INDEX "ACME_PROCUREMENT_PURCHASEORDERS_OWNER_STATUS" ON "ACME_PROCUREMENT_PURCHASEORDERS" ("CREATEDBY", "STATUS")

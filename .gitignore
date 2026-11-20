@@ -12,6 +12,7 @@ default-env.json
 .env
 .env.*
 *.sqlite
+*.sqlite-*
 *.db
 coverage/
 resources/

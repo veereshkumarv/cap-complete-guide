@@ -1,0 +1,27 @@
+{
+  "//": [
+    "What: npm manifest of the draft-workflow sample: CAP runtime (also serves the Fiori app in app/), SQLite and cds.test for development and tests, and the watch/start/test scripts.",
+    "Why: [CAP-S07] standalone sample for draft editing, bound actions as a state machine and Fiori side effects (M03, M06, M09) without the procurement domain.",
+    "If missing or unlinked: cds watch cannot resolve @sap/cds or the SQLite driver and npm test has no script."
+  ],
+  "name": "sample-draft-workflow",
+  "version": "1.0.0",
+  "description": "Expense reports with draft editing, submit/approve/reject actions and a live total via side effects in a Fiori Elements app.",
+  "private": true,
+  "engines": {
+    "node": "^22 || ^24"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "dependencies": {
+    "@sap/cds": "^10"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^1",
+    "@cap-js/sqlite": "^3",
+    "@sap/cds-dk": "^10"
+  }
+}

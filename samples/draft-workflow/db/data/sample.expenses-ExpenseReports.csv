@@ -1,0 +1,4 @@
+ID;title;status;total;currency_code;createdBy
+e1000000-0000-4000-8000-000000000001;Customer visit Munich;Draft;412.50;EUR;alice
+e1000000-0000-4000-8000-000000000002;Trade fair Hanover;Submitted;1180.00;EUR;alice
+e1000000-0000-4000-8000-000000000003;Team offsite;Approved;95.20;EUR;bob

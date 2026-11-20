@@ -1,0 +1,7 @@
+BusinessPartner;AddressID;Country;CityName;PostalCode;StreetName
+17100001;1001;DE;Berlin;10115;Invalidenstraße
+17100002;1002;US;San Francisco;94105;Market Street
+17100003;1003;FR;Lyon;69002;Rue de la République
+17100004;1004;IN;Bengaluru;560001;MG Road
+17100005;1005;JP;Tokyo;100-0005;Marunouchi
+17100006;1006;SE;Stockholm;11122;Drottninggatan

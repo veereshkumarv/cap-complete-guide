@@ -1,0 +1,32 @@
+# What: GitHub Actions pipeline of the guide repository: install once, lint (ESLint + CDS rules +
+#     file-header check) and run the tests of every stage, sample and the final app on Node 22 and 24.
+# Why: [CAP-M23] / [CAP-S09] lint and tests are quality gates; running them on every push and pull
+#     request keeps every stage green while later stages are added.
+# If missing or unlinked: A change that breaks an earlier stage, a lint error or a file without a
+#     header is merged unnoticed.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test

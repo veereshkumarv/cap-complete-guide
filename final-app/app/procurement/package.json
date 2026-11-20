@@ -1,0 +1,19 @@
+{
+  "//": [
+    "What: npm manifest of the Fiori app as a UI5 project: UI5 tooling (@ui5/cli) builds a preload bundle and ui5-task-zipper packs it with xs-app.json into dist/procurement.zip for the HTML5 Application Repository.",
+    "Why: [CAP-M22] / [CAP-STAGE-10] in production the UI is not served by the CAP server but from the HTML5 repository; the mta.yaml html5 module runs npm ci && npm run build here (cds add html5-repo).",
+    "If missing or unlinked: mbt build fails for the html5 module and the app deployer has no procurement.zip to upload."
+  ],
+  "name": "procurement",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "@ui5/cli": "^4",
+    "ui5-task-zipper": "^3"
+  },
+  "main": "webapp/index.html",
+  "scripts": {
+    "build": "ui5 build preload --clean-dest",
+    "start": "ui5 serve"
+  }
+}

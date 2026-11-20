@@ -1,0 +1,12 @@
+# What: Files Git must not track in the extension project: the pulled base model, dependencies,
+#     the build archive pushed to the tenant and local credentials.
+# Why: [CAP-S09] .base is fetched from the running app with `cds pull` (always the tenant's current
+#     model); gen/extension.tgz is rebuilt by every `cds push`.
+# If missing or unlinked: A stale base model or credentials in .cdsrc-private.json are committed.
+node_modules/
+.base/
+gen/
+.cdsrc-private.json
+default-env.json
+*.sqlite
+.env

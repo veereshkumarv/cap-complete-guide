@@ -137,7 +137,7 @@ annotate service.PurchaseOrderItems with @(
 ) {
   product @Common: {
     Text           : product.name,
-    TextArrangement: #TextFirst,
+    TextArrangement: #TextOnly, // the key is a UUID - never show it
     ValueList      : {
       CollectionPath: 'Products',
       Parameters    : [

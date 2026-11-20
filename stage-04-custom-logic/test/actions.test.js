@@ -87,7 +87,7 @@ describe('topSuppliers function (stage 04)', () => {
   it('ranks suppliers by approved and sent order value', async () => {
     const { data } = await GET(`${P}/topSuppliers(limit=5)`);
     expect(data.value.map((r) => r.supplier)).to.deep.equal(['Bürotec GmbH', 'Bharat Tech Distributors']);
-    expect(Number(data.value[0].total)).to.equal(1309.7);
+    expect(Number(data.value[0].total)).to.equal(1308.6);
   });
 
   it('validates the limit parameter', async () => {

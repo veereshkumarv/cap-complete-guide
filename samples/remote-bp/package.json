@@ -1,0 +1,47 @@
+{
+  "//": [
+    "What: npm manifest of the remote-bp sample: CAP runtime, SAP Cloud SDK (used by CAP to call the remote OData V2 API), the cds.requires entry of API_BUSINESS_PARTNER (mocked in development, destination S4_BP in production) and local messaging for business-partner events.",
+    "Why: [CAP-M08] / [CAP-DEC-05] focused sample - delegate live reads vs. replicate into a local table, side by side, without the rest of the procurement app.",
+    "If missing or unlinked: cds watch cannot resolve @sap/cds, cds.connect.to('API_BUSINESS_PARTNER') fails with 'no credentials', and npm test has no script."
+  ],
+  "name": "sample-remote-bp",
+  "version": "1.0.0",
+  "description": "CAP sample: consume the S/4HANA Business Partner API - live delegation, local mock and idempotent replication.",
+  "private": true,
+  "engines": {
+    "node": "^22 || ^24"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "dependencies": {
+    "@sap/cds": "^10",
+    "@sap-cloud-sdk/connectivity": "^4",
+    "@sap-cloud-sdk/http-client": "^4",
+    "@sap-cloud-sdk/resilience": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^1",
+    "@cap-js/sqlite": "^3",
+    "@sap/cds-dk": "^10"
+  },
+  "cds": {
+    "requires": {
+      "API_BUSINESS_PARTNER": {
+        "kind": "odata-v2",
+        "model": "srv/external/API_BUSINESS_PARTNER",
+        "[production]": {
+          "credentials": {
+            "destination": "S4_BP",
+            "path": "/sap/opu/odata/sap/API_BUSINESS_PARTNER"
+          }
+        }
+      },
+      "messaging": {
+        "kind": "local-messaging"
+      }
+    }
+  }
+}

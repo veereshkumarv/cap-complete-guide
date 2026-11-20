@@ -1,0 +1,11 @@
+ID;name;descr;category_code;price;currency_code;stock
+b1000000-0000-4000-8000-000000000001;Office Chair;Ergonomic chair with lumbar support;FURNITURE;189.90;EUR;40
+b1000000-0000-4000-8000-000000000002;Standing Desk;Electric height-adjustable desk;FURNITURE;549.00;EUR;12
+b1000000-0000-4000-8000-000000000003;Filing Cabinet;Lockable steel cabinet, 3 drawers;FURNITURE;229.00;EUR;8
+b1000000-0000-4000-8000-000000000004;Laptop 14;14-inch business laptop, 16 GB RAM;IT;1249.00;EUR;25
+b1000000-0000-4000-8000-000000000005;USB-C Dock;Docking station with dual display output;IT;219.50;EUR;60
+b1000000-0000-4000-8000-000000000006;27-inch Monitor;QHD monitor with height-adjustable stand;IT;329.00;USD;30
+b1000000-0000-4000-8000-000000000007;Printer Paper A4;500 sheets, 80 g/m2;SUPPLIES;5.49;EUR;800
+b1000000-0000-4000-8000-000000000008;Ballpoint Pens;Box of 50 blue pens;SUPPLIES;12.90;EUR;150
+b1000000-0000-4000-8000-000000000009;Desk Installation;On-site assembly of standing desks (per desk);SERVICES;80.00;EUR;0
+b1000000-0000-4000-8000-000000000010;Laptop Maintenance;Annual maintenance contract per device;SERVICES;95.00;USD;0

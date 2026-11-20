@@ -13,7 +13,8 @@ If missing or unlinked: The object page fails to render the section ("could not 
     <ObjectListItem title="{decision}" number="{approver}"
                     numberState="{= ${decision} === 'Approved' ? 'Success' : 'Error' }">
       <ObjectAttribute text="{comment}"/>
-      <ObjectAttribute text="{ path: 'createdAt', type: 'sap.ui.model.odata.type.DateTimeOffset', formatOptions: { style: 'medium' } }"/>
+      <!-- no explicit type: the OData V4 model derives Edm.DateTimeOffset formatting from $metadata -->
+      <ObjectAttribute text="{createdAt}"/>
     </ObjectListItem>
   </List>
 </core:FragmentDefinition>

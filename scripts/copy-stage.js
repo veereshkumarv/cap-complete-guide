@@ -14,7 +14,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
-const SKIP = new Set(['node_modules', 'gen', 'mta_archives', 'coverage', 'resources']);
+// Build output and local credential files ([CAP-S09]: no secrets) never travel to the next stage.
+const SKIP = new Set(['node_modules', 'gen', 'mta_archives', 'coverage', 'resources', 'default-env.json', '.cdsrc-private.json', '.env']);
 
 const [from, to, description] = process.argv.slice(2);
 if (!from || !to) {
@@ -41,5 +42,10 @@ const pkg = JSON.parse(await readFile(pkgFile, 'utf8'));
 const number = /^stage-(\d+)/.exec(to)?.[1];
 pkg.name = number ? `procurement-stage-${number}` : `procurement-${path.basename(to)}`;
 if (description) pkg.description = description;
+// The "//" header names the stage it belongs to; point it at the new stage so it is not carried forward stale.
+const title = /^stage-\d+-(.+)$/.exec(to)?.[1]?.replace(/-/g, ' ');
+if (number && title && Array.isArray(pkg['//'])) {
+  pkg['//'][0] = pkg['//'][0].replace(/stage \d+ \([^)]*\)/, `stage ${number} (${title})`);
+}
 await writeFile(pkgFile, `${JSON.stringify(pkg, null, 2)}\n`);
 console.log(`Copied ${from} -> ${to} (package ${pkg.name}). Run npm install at the repo root.`);

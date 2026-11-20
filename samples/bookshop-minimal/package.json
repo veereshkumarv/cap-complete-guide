@@ -1,0 +1,27 @@
+{
+  "//": [
+    "What: npm manifest of the bookshop-minimal sample: CAP runtime, SQLite and cds.test for development and tests, and the watch/start/test scripts.",
+    "Why: [CAP-S07] the smallest complete CAP app (M01-M03) as a standalone project that can be copied out of the guide repository.",
+    "If missing or unlinked: cds watch cannot resolve @sap/cds or the SQLite driver and npm test has no script."
+  ],
+  "name": "sample-bookshop-minimal",
+  "version": "1.0.0",
+  "description": "Smallest CAP app: Books and Authors, a read-only CatalogService and an AdminService.",
+  "private": true,
+  "engines": {
+    "node": "^22 || ^24"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "dependencies": {
+    "@sap/cds": "^10"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^1",
+    "@cap-js/sqlite": "^3",
+    "@sap/cds-dk": "^10"
+  }
+}

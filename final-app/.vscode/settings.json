@@ -1,0 +1,6 @@
+// What: VS Code settings of the project: let the ESLint extension also validate CDS models and CSV data.
+// Why: [CAP-M23] lint findings (`cds lint`) show up while editing, not only in the pipeline; added by `cds add lint`.
+// If missing or unlinked: CDS modelling problems are only reported when `cds lint` runs.
+{
+  "eslint.validate": ["cds", "csn", "csv", "csv (semicolon)", "tsv", "tab", "javascript", "typescript", "java"]
+}

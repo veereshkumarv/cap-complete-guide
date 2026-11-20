@@ -1,0 +1,25 @@
+# What: Release pipeline: on a published GitHub release, run the tests, then deploy to the
+#     Production environment (reuses test.yaml and cf.yaml).
+# Why: [CAP-M23] quality gate - production only receives versions whose tests passed.
+# If missing or unlinked: Releases are deployed without a test gate or not at all.
+name: Release
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  tests:
+    uses: ./.github/workflows/test.yaml
+    secrets: inherit
+  deploy-cf:
+    needs: [tests]
+    uses: ./.github/workflows/cf.yaml
+    secrets: inherit
+    with:
+      environment: Production

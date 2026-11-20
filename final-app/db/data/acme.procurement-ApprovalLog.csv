@@ -1,0 +1,3 @@
+ID;po_ID;approver;decision;comment
+f1000000-0000-4000-8000-000000000001;d1000000-0000-4000-8000-000000000003;bob;Approved;Within budget
+f1000000-0000-4000-8000-000000000002;d1000000-0000-4000-8000-000000000004;bob;Rejected;Use the framework contract supplier instead

@@ -1,0 +1,73 @@
+{
+  "//": [
+    "What: npm manifest of the multitenant SaaS sample: CAP runtime, MTX (@sap/cds-mtxs), SQLite for development, the profiles that switch between single-tenant development (default) and local multitenancy (with-mtx), mocked users with tenants, and the scripts watch:sidecar / watch:mtx / subscribe.",
+    "Why: [CAP-M20] / [CAP-S07] the smallest app that shows tenant subscription, one database per tenant, upgrades and unsubscription - the same setup as stage 09 without the procurement domain.",
+    "If missing or unlinked: The folder is no CAP project, the sidecar cannot find the app model, and no tenant can be subscribed."
+  ],
+  "name": "sample-multitenant-saas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Standalone sample: smallest multitenant CAP app with an MTX sidecar (one database per tenant, subscribe/upgrade/unsubscribe, tenant extensions).",
+  "engines": {
+    "node": "^22 || ^24"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "watch:sidecar": "cds watch mtx/sidecar",
+    "watch:mtx": "cds watch --profile with-mtx",
+    "subscribe": "sh scripts/subscribe.sh",
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "dependencies": {
+    "@cap-js/hana": "^3",
+    "@sap/cds": "^10",
+    "@sap/cds-mtxs": "^4",
+    "@sap/xssec": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^1",
+    "@cap-js/sqlite": "^3",
+    "@sap/cds-dk": "^10"
+  },
+  "cds": {
+    "profile": "with-mtx-sidecar",
+    "requires": {
+      "[with-mtx]": {
+        "multitenancy": true
+      },
+      "[production]": {
+        "multitenancy": true,
+        "auth": "xsuaa"
+      },
+      "extensibility": true,
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "alice": {
+            "password": "",
+            "tenant": "t1",
+            "roles": [
+              "cds.ExtensionDeveloper"
+            ]
+          },
+          "bob": {
+            "password": "",
+            "tenant": "t1"
+          },
+          "carol": {
+            "password": "",
+            "tenant": "t2"
+          },
+          "yves": {
+            "password": "",
+            "roles": [
+              "internal-user"
+            ]
+          },
+          "*": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+# What: Sample HTTP requests for the remote-bp sample (VS Code "REST Client" / IntelliJ HTTP client).
+# Why: [CAP-M08] click through delegation and replication without writing code.
+# If missing or unlinked: Learners have to reconstruct the URLs from the tests.
+#
+# Start first: npm run watch (mocks API_BUSINESS_PARTNER from srv/external/data).
+
+@P = http://localhost:4004/odata/v4/partners
+
+### 1 Live: blocked partners, filtered in the remote API
+GET {{P}}/RemotePartners?$filter=blocked eq true&$select=name,lastChanged
+
+### 2 Replicated copy before the load (2 rows from db/data)
+GET {{P}}/Partners
+
+### 3 Full replication: 4 created, 1 updated (Kanto is blocked now), 1 unchanged
+POST {{P}}/replicateAll
+Content-Type: application/json
+
+{}
+
+### 4 Again - everything unchanged (idempotent)
+POST {{P}}/replicateAll
+Content-Type: application/json
+
+{}
+
+### 5 Local data supports what the remote API cannot do cheaply: sort and filter at will
+GET {{P}}/Partners?$filter=country eq 'DE' or blocked eq true&$orderby=name

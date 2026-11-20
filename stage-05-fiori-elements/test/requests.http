@@ -1,5 +1,6 @@
-# What: Sample HTTP requests for stage 04 (VS Code "REST Client" / IntelliJ HTTP client format):
-#     metadata, reads, the draft round trip, status actions, topSuppliers and RemoteSuppliers.
+# What: Sample HTTP requests for stage 05 (VS Code "REST Client" / IntelliJ HTTP client format):
+#     metadata, reads, the draft round trip, status actions, topSuppliers, RemoteSuppliers and the
+#     requests the Fiori app sends (manifest, annotated $metadata, list with status colour).
 # Why: [CAP-STAGE-03] requires sample requests; clicking through them shows exactly what a Fiori
 #     app sends for draft editing.
 # If missing or unlinked: Learners have to reconstruct draft URLs from the test code.
@@ -78,3 +79,13 @@ GET {{P}}/topSuppliers(limit=3)
 
 ### 14 Remote business partners (mocked S/4HANA API in development)
 GET {{P}}/RemoteSuppliers?$filter=blocked eq false&$orderby=name
+
+### 15 Fiori app descriptor (served statically from app/procurement/webapp)
+GET {{host}}/procurement/webapp/manifest.json
+
+### 16 Annotated $metadata in German - the labels the app shows with ?sap-language=de
+GET {{P}}/$metadata
+Accept-Language: de
+
+### 17 What the List Report requests: active orders and drafts, with the status colour
+GET {{P}}/PurchaseOrders?$select=orderNo,status,statusCriticality,totalAmount,currency_code&$expand=supplier($select=name)&$filter=(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)&$orderby=orderNo desc

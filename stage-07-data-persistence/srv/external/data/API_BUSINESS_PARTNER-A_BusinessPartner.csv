@@ -1,0 +1,7 @@
+BusinessPartner;BusinessPartnerCategory;BusinessPartnerFullName;BusinessPartnerGrouping;Industry;BusinessPartnerIsBlocked;CreationDate;LastChangeDate
+17100001;2;Bürotec GmbH;BP02;RETAIL;false;2024-02-01;2026-10-02
+17100002;2;Pacific Office Supply Inc.;BP02;RETAIL;false;2024-03-11;2026-09-15
+17100003;2;Mobilier Lyon SA;BP02;FURN;false;2024-05-20;2026-08-30
+17100004;2;Bharat Tech Distributors;BP02;HIGHTECH;false;2025-01-07;2026-11-01
+17100005;2;Kanto Electronics KK;BP02;HIGHTECH;true;2025-02-14;2026-07-19
+17100006;2;Nordic Paper AB;BP02;PAPER;false;2026-06-01;2026-11-10

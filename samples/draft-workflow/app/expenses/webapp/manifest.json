@@ -1,0 +1,134 @@
+{
+  "//": [
+    "What: UI5 application descriptor of the expenses app: OData V4 data source, routing to the Fiori Elements List Report and Object Page, inline creation of expense items.",
+    "Why: [CAP-M09] floorplans and navigation are configured here; field-level UI comes from CDS annotations.",
+    "If missing or unlinked: The component cannot start - no data source, pages or navigation."
+  ],
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "sample.expenses",
+    "type": "application",
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "dataSources": {
+      "ExpenseService": {
+        "uri": "/odata/v4/expenses/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.148.0",
+      "libs": {
+        "sap.m": {},
+        "sap.fe.templates": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "sample.expenses.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "ExpenseService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      }
+    },
+    "routing": {
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "ReportsList",
+          "target": "ReportsList"
+        },
+        {
+          "pattern": "ExpenseReports({key}):?query:",
+          "name": "ReportsObjectPage",
+          "target": "ReportsObjectPage"
+        }
+      ],
+      "targets": {
+        "ReportsList": {
+          "type": "Component",
+          "id": "ReportsList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/ExpenseReports",
+              "variantManagement": "None",
+              "initialLoad": "Enabled",
+              "navigation": {
+                "ExpenseReports": {
+                  "detail": {
+                    "route": "ReportsObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable",
+                    "selectionMode": "Single"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ReportsObjectPage": {
+          "type": "Component",
+          "id": "ReportsObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/ExpenseReports",
+              "editableHeaderContent": false,
+              "controlConfiguration": {
+                "items/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable",
+                    "creationMode": {
+                      "name": "Inline"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
+  }
+}

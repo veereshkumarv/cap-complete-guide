@@ -1,0 +1,21 @@
+{
+  "//": [
+    "What: npm manifest of the sample tenant extension project: which SaaS app it extends (extends), the .base workspace that `cds pull` fills with the app's base model, and the CAP dependency used by `cds push`.",
+    "Why: [CAP-M21] / [CAP-STAGE-09] customers extend a subscribed SaaS app in their own project and push the result to their tenant only; this is the template a provider hands out.",
+    "If missing or unlinked: cds pull and cds push do not know which app to extend, and `using from 'procurement-final-app'` cannot be resolved."
+  ],
+  "name": "procurement-ext-sample",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sample tenant extension for ACME Procurement (stage 09): adds a delivery note to purchase orders.",
+  "extends": "procurement-final-app",
+  "workspaces": [
+    ".base"
+  ],
+  "dependencies": {
+    "@sap/cds": "^10"
+  },
+  "optionalDependencies": {
+    "@cap-js/sqlite": "^3"
+  }
+}

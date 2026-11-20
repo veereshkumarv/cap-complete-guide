@@ -21,6 +21,10 @@ const EXCEPTIONS = [
   { pattern: /^CAP_DEVELOPMENT_GUIDE\.md$/, reason: 'the master guide supplied by the user; its YAML front matter states purpose and status' },
   { pattern: /(^|\/)data\/[^/]+\.csv$/, reason: "CAP's CSV loader reads every line as data (db/data, srv/external/data, test/data); described in each folder README" },
   { pattern: /(^|\/)xs-security\.json$/, reason: 'XSUAA rejects unknown keys in the security descriptor; described in the folder README' },
+  { pattern: /(^|\/)xs-app\.json$/, reason: 'the approuter validates xs-app.json against a strict schema; described in the folder README' },
+  { pattern: /(^|\/)\.hdiconfig$/, reason: 'HDI reads .hdiconfig as strict JSON (no comments, no extra keys); described in the stage README' },
+  { pattern: /(^|\/)undeploy\.json$/, reason: 'HDI reads a plain JSON array of file patterns; written by @cap-js/change-tracking, described in the stage README' },
+  { pattern: /(^|\/)event-mesh\.json$/, reason: 'service instance parameters for SAP Event Mesh - the broker rejects unknown keys; described in the stage README' },
 ];
 const BINARY = /\.(png|jpe?g|gif|ico|pdf|zip|mtar|sqlite|db)$/i;
 const HEADER_WINDOW_LINES = 40;

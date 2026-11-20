@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+What: OData V2 metadata of the SAP S/4HANA Cloud API "Business Partner (A2X)" - reduced to the
+    entity sets and properties ACME uses (A_BusinessPartner, A_BusinessPartnerAddress).
+Why: [CAP-M08] input for `cds import`; property names, types and sap: annotations follow the
+    published API_BUSINESS_PARTNER service so code written against it works with the real system.
+    The full file is available on SAP Business Accelerator Hub (login required).
+If missing or unlinked: `cds import` cannot regenerate srv/external/API_BUSINESS_PARTNER.cds; the
+    already generated CDS model keeps working. (Copied from stage-04-custom-logic.)
+-->
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+  <edmx:DataServices m:DataServiceVersion="2.0">
+    <Schema Namespace="API_BUSINESS_PARTNER" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+      <EntityType Name="A_BusinessPartnerType" sap:label="Business Partner" sap:content-version="1">
+        <Key>
+          <PropertyRef Name="BusinessPartner"/>
+        </Key>
+        <Property Name="BusinessPartner" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Business Partner"/>
+        <Property Name="BusinessPartnerCategory" Type="Edm.String" MaxLength="1" sap:label="BP Category"/>
+        <Property Name="BusinessPartnerFullName" Type="Edm.String" MaxLength="81" sap:label="Full Name"/>
+        <Property Name="BusinessPartnerGrouping" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Grouping"/>
+        <Property Name="Industry" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Industry"/>
+        <Property Name="BusinessPartnerIsBlocked" Type="Edm.Boolean" sap:display-format="NonNegative" sap:label="Central Block"/>
+        <Property Name="CreationDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Created On"/>
+        <Property Name="LastChangeDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Last Changed On"/>
+        <NavigationProperty Name="to_BusinessPartnerAddress" Relationship="API_BUSINESS_PARTNER.assoc_BP_Address" FromRole="FromRole_assoc_BP_Address" ToRole="ToRole_assoc_BP_Address"/>
+      </EntityType>
+      <EntityType Name="A_BusinessPartnerAddressType" sap:label="BP Address" sap:content-version="1">
+        <Key>
+          <PropertyRef Name="BusinessPartner"/>
+          <PropertyRef Name="AddressID"/>
+        </Key>
+        <Property Name="BusinessPartner" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Business Partner"/>
+        <Property Name="AddressID" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Address Number"/>
+        <Property Name="Country" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Country/Region Key"/>
+        <Property Name="CityName" Type="Edm.String" MaxLength="40" sap:label="City"/>
+        <Property Name="PostalCode" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Postal Code"/>
+        <Property Name="StreetName" Type="Edm.String" MaxLength="60" sap:label="Street"/>
+      </EntityType>
+      <Association Name="assoc_BP_Address" sap:content-version="1">
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerType" Multiplicity="1" Role="FromRole_assoc_BP_Address"/>
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerAddressType" Multiplicity="*" Role="ToRole_assoc_BP_Address"/>
+      </Association>
+      <EntityContainer Name="API_BUSINESS_PARTNER_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+        <EntitySet Name="A_BusinessPartner" EntityType="API_BUSINESS_PARTNER.A_BusinessPartnerType" sap:searchable="true" sap:content-version="1"/>
+        <EntitySet Name="A_BusinessPartnerAddress" EntityType="API_BUSINESS_PARTNER.A_BusinessPartnerAddressType" sap:searchable="true" sap:content-version="1"/>
+        <AssociationSet Name="assoc_BP_Address" Association="API_BUSINESS_PARTNER.assoc_BP_Address" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+          <End EntitySet="A_BusinessPartner" Role="FromRole_assoc_BP_Address"/>
+          <End EntitySet="A_BusinessPartnerAddress" Role="ToRole_assoc_BP_Address"/>
+        </AssociationSet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

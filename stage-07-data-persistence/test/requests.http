@@ -1,0 +1,161 @@
+# What: Sample HTTP requests for stage 07 (VS Code "REST Client" / IntelliJ HTTP client format):
+#     the requests of stage 06 (roles, 401/403/404) plus requests 25-28 for free-text search and
+#     server-driven paging.
+# Why: [CAP-STAGE-03] requires sample requests; clicking through them shows exactly what a Fiori
+#     app sends for draft editing.
+# If missing or unlinked: Learners have to reconstruct draft URLs from the test code.
+#
+# Start the server first: npm run watch. Replace {{draftId}} with the ID returned by request 4.
+# Users (password empty): alice/fred = Requester, bob = Approver, carol = Buyer, dave = Admin,
+# erin = Auditor, gina = Requester + Approver. See package.json > cds.requires.auth.
+
+@host = http://localhost:4004
+@P = {{host}}/odata/v4/procurement
+
+### 1 Service metadata
+GET {{P}}/$metadata
+Authorization: Basic alice:
+
+### 2 Orders with items and supplier
+GET {{P}}/PurchaseOrders?$expand=items($expand=product($select=name)),supplier&$orderby=orderNo
+Authorization: Basic alice:
+
+### 3 Products in German, filtered and paged
+GET {{P}}/Products?sap-locale=de&$filter=category_code eq 'IT'&$select=name,price&$top=5
+Authorization: Basic alice:
+
+### 4 Create a draft order
+POST {{P}}/PurchaseOrders
+Authorization: Basic alice:
+Content-Type: application/json
+
+{ "supplier_ID": "a1000000-0000-4000-8000-000000000001", "currency_code": "EUR" }
+
+### 5 Add an item to the draft
+@draftId = replace-with-ID-from-request-4
+POST {{P}}/PurchaseOrders(ID={{draftId}},IsActiveEntity=false)/items
+Authorization: Basic alice:
+Content-Type: application/json
+
+{ "product_ID": "b1000000-0000-4000-8000-000000000001", "quantity": 2, "netPrice": 189.90 }
+
+### 6 Activate the draft
+POST {{P}}/PurchaseOrders(ID={{draftId}},IsActiveEntity=false)/ProcurementService.draftActivate
+Authorization: Basic alice:
+Content-Type: application/json
+
+{}
+
+### 7 Edit an active order (creates a draft copy)
+POST {{P}}/PurchaseOrders(ID=d1000000-0000-4000-8000-000000000001,IsActiveEntity=true)/ProcurementService.draftEdit
+Authorization: Basic alice:
+Content-Type: application/json
+
+{ "PreserveChanges": true }
+
+### 8 Admin: create a supplier with contacts (deep insert; Buyer)
+POST {{host}}/odata/v4/admin/Suppliers
+Authorization: Basic carol:
+Content-Type: application/json
+
+{ "name": "Nordic Paper AB", "country_code": "DE", "rating": 4, "contacts": [ { "name": "Elsa Berg", "email": "elsa.berg@nordic.example" } ] }
+
+### 9 Submit an order (as the requester alice)
+POST {{P}}/PurchaseOrders(ID=d1000000-0000-4000-8000-000000000001,IsActiveEntity=true)/ProcurementService.submit
+Authorization: Basic alice:
+Content-Type: application/json
+
+{}
+
+### 10 Approve it (as bob - alice is no Approver: 403)
+POST {{P}}/PurchaseOrders(ID=d1000000-0000-4000-8000-000000000001,IsActiveEntity=true)/ProcurementService.approve
+Authorization: Basic bob:
+Content-Type: application/json
+
+{ "comment": "Budget available" }
+
+### 11 Invalid transition -> 409 with a German message
+POST {{P}}/PurchaseOrders(ID=d1000000-0000-4000-8000-000000000001,IsActiveEntity=true)/ProcurementService.submit
+Authorization: Basic alice:
+Accept-Language: de
+Content-Type: application/json
+
+{}
+
+### 12 Approval history of the order
+GET {{P}}/ApprovalLog?$filter=po_ID eq d1000000-0000-4000-8000-000000000001
+Authorization: Basic alice:
+
+### 13 Top suppliers (function; not for Requesters)
+GET {{P}}/topSuppliers(limit=3)
+Authorization: Basic erin:
+
+### 14 Remote business partners (mocked S/4HANA API in development; Buyers and Admins)
+GET {{P}}/RemoteSuppliers?$filter=blocked eq false&$orderby=name
+Authorization: Basic carol:
+
+### 15 Fiori app descriptor (served statically from app/procurement/webapp)
+GET {{host}}/procurement/webapp/manifest.json
+
+### 16 Annotated $metadata in German - the labels the app shows with ?sap-language=de
+GET {{P}}/$metadata
+Authorization: Basic alice:
+Accept-Language: de
+
+### 17 What the List Report requests: active orders and drafts, with the status colour
+GET {{P}}/PurchaseOrders?$select=orderNo,status,statusCriticality,totalAmount,currency_code&$expand=supplier($select=name)&$filter=(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)&$orderby=orderNo desc
+Authorization: Basic alice:
+
+### 18 No user -> 401 (also for $metadata)
+GET {{P}}/$metadata
+
+### 19 Unknown user -> 401 ("*": false in the mocked users)
+GET {{P}}/PurchaseOrders
+Authorization: Basic zoe:
+
+### 20 Instance-based: alice sees only her own orders (3 of 4)
+GET {{P}}/PurchaseOrders?$select=orderNo,createdBy
+Authorization: Basic alice:
+
+### 21 ... and gets 404 for carol's order - its existence is not revealed
+GET {{P}}/PurchaseOrders(ID=d1000000-0000-4000-8000-000000000003,IsActiveEntity=true)
+Authorization: Basic alice:
+
+### 22 Wrong role -> 403: a Requester cannot send an order
+POST {{P}}/PurchaseOrders(ID=d1000000-0000-4000-8000-000000000003,IsActiveEntity=true)/ProcurementService.send
+Authorization: Basic alice:
+Content-Type: application/json
+
+{}
+
+### 23 Requesters cannot edit an order once it left status Draft -> 403
+POST {{P}}/PurchaseOrders(ID=d1000000-0000-4000-8000-000000000002,IsActiveEntity=true)/ProcurementService.draftEdit
+Authorization: Basic alice:
+Content-Type: application/json
+
+{ "PreserveChanges": true }
+
+### 24 Auditor: read everything, change nothing (403)
+POST {{host}}/odata/v4/admin/Suppliers
+Authorization: Basic erin:
+Content-Type: application/json
+
+{ "name": "Audit Corp" }
+
+### 25 Free-text search: order number or supplier name (@cds.search)
+GET {{P}}/PurchaseOrders?$search=Lyon&$select=orderNo,status
+Authorization: Basic erin:
+
+### 26 Search in localized product texts (German)
+GET {{P}}/Products?$search=Stuhl&$select=name,descr
+Authorization: Basic erin:
+Accept-Language: de
+
+### 27 No $top -> at most 50 rows per page (@cds.query.limit default); with more than 50 rows the
+#    response ends with @odata.nextLink - the sample data is too small, see test/persistence.test.js
+GET {{P}}/Products?$select=name
+Authorization: Basic erin:
+
+### 28 $top above the maximum is capped at 200 (@cds.query.limit max)
+GET {{P}}/PurchaseOrders?$select=orderNo&$top=100000&$count=true
+Authorization: Basic erin:

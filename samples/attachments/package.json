@@ -1,0 +1,27 @@
+{
+  "//": [
+    "What: npm manifest of the attachments sample: CAP runtime only - files are stored as LargeBinary in the database and streamed with CAP's built-in media handling, no plugin.",
+    "Why: [CAP-M15] the do-it-yourself counterpart to the @cap-js/attachments plugin of stage 08; shows what the plugin takes care of (validation, streaming, content-disposition).",
+    "If missing or unlinked: cds watch cannot resolve @sap/cds or the SQLite driver and npm test has no script."
+  ],
+  "name": "sample-attachments",
+  "version": "1.0.0",
+  "description": "CAP sample: media data with LargeBinary, @Core.MediaType and @Core.ContentDisposition - upload, download, size and type validation.",
+  "private": true,
+  "engines": {
+    "node": "^22 || ^24"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "dependencies": {
+    "@sap/cds": "^10"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^1",
+    "@cap-js/sqlite": "^3",
+    "@sap/cds-dk": "^10"
+  }
+}

@@ -129,7 +129,7 @@ sequenceDiagram
 | invoice never appears | messaging not queued, or consumer throws | `npx cds env requires.messaging` shows `queued: true`; check the log for retries |
 | duplicate invoices | consumer not idempotent | key derived from the message, check before insert |
 | rows stay in `cds.outbox.Messages` with `attempts` 10 | dead letters | read `lastError`, fix, reset `attempts` to 0 to retry |
-| retries take long | exponential backoff | expected - attempt 10 waits ~38 s, maximum ~25 min |
+| retries take long | exponential backoff | expected - waits grow as (1.5^n - 1) s: ~37 s before the 9th retry, capped at ~25 min |
 
 ## References
 

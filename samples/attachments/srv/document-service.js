@@ -1,0 +1,42 @@
+/**
+ * What: Upload guard of DocumentService: only allowed media types, at most 1 MB per file (checked
+ *     while streaming, not only via Content-Length), and the stored size of each file.
+ * Why: [CAP-M15] uploads are untrusted input - without limits a client can fill the database or
+ *     store executable content; this is what the attachments plugin (plus malware scanning) does
+ *     for you in stage 08.
+ * If missing or unlinked: Any file of any size and type is accepted and stored.
+ */
+const cds = require('@sap/cds');
+const { Transform } = require('node:stream');
+
+const MAX_BYTES = 1024 * 1024; // 1 MB
+const ALLOWED = ['application/pdf', 'image/png', 'image/jpeg', 'text/plain'];
+
+module.exports = class DocumentService extends cds.ApplicationService {
+  init() {
+    const { Documents } = this.entities;
+
+    this.before('UPDATE', Documents, (req) => {
+      const { content } = req.data;
+      if (content === undefined || content === null) return; // metadata update, or file removed
+
+      const type = (req.data.mimeType ?? req.headers?.['content-type'] ?? '').split(';')[0].trim();
+      if (!ALLOWED.includes(type)) return req.reject(415, `File type "${type}" is not allowed (${ALLOWED.join(', ')}).`);
+      const declared = Number(req.headers?.['content-length']);
+      if (declared > MAX_BYTES) return req.reject(413, 'The file is larger than 1 MB.');
+
+      // Content-Length can be absent or wrong (chunked uploads): count the bytes while streaming.
+      let size = 0;
+      req.data.content = content.pipe(new Transform({
+        transform(chunk, _encoding, done) {
+          size += chunk.length;
+          if (size > MAX_BYTES) return done(cds.error(413, 'The file is larger than 1 MB.'));
+          done(null, chunk);
+        },
+      }));
+      req.on('succeeded', () => UPDATE(Documents, req.data.ID).with({ size }).catch(() => {}));
+    });
+
+    return super.init();
+  }
+};

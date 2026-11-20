@@ -1,0 +1,50 @@
+# What: Sample HTTP requests for stage 03 (VS Code "REST Client" / IntelliJ HTTP client format):
+#     metadata, reads with query options and the complete draft round trip.
+# Why: [CAP-STAGE-03] requires sample requests; clicking through them shows exactly what a Fiori
+#     app sends for draft editing.
+# If missing or unlinked: Learners have to reconstruct draft URLs from the test code.
+#
+# Start the server first: npm run watch. Replace {{draftId}} with the ID returned by request 4.
+
+@host = http://localhost:4004
+@P = {{host}}/odata/v4/procurement
+
+### 1 Service metadata
+GET {{P}}/$metadata
+
+### 2 Orders with items and supplier
+GET {{P}}/PurchaseOrders?$expand=items($expand=product($select=name)),supplier&$orderby=orderNo
+
+### 3 Products in German, filtered and paged
+GET {{P}}/Products?sap-locale=de&$filter=category_code eq 'IT'&$select=name,price&$top=5
+
+### 4 Create a draft order
+POST {{P}}/PurchaseOrders
+Content-Type: application/json
+
+{ "supplier_ID": "a1000000-0000-4000-8000-000000000001", "currency_code": "EUR" }
+
+### 5 Add an item to the draft
+@draftId = replace-with-ID-from-request-4
+POST {{P}}/PurchaseOrders(ID={{draftId}},IsActiveEntity=false)/items
+Content-Type: application/json
+
+{ "product_ID": "b1000000-0000-4000-8000-000000000001", "quantity": 2, "netPrice": 189.90 }
+
+### 6 Activate the draft
+POST {{P}}/PurchaseOrders(ID={{draftId}},IsActiveEntity=false)/ProcurementService.draftActivate
+Content-Type: application/json
+
+{}
+
+### 7 Edit an active order (creates a draft copy)
+POST {{P}}/PurchaseOrders(ID=d1000000-0000-4000-8000-000000000001,IsActiveEntity=true)/ProcurementService.draftEdit
+Content-Type: application/json
+
+{ "PreserveChanges": true }
+
+### 8 Admin: create a supplier with contacts (deep insert)
+POST {{host}}/odata/v4/admin/Suppliers
+Content-Type: application/json
+
+{ "name": "Nordic Paper AB", "country_code": "DE", "rating": 4, "contacts": [ { "name": "Elsa Berg", "email": "elsa.berg@nordic.example" } ] }

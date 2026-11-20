@@ -1,0 +1,18 @@
+# What: Files Git must not track in this CAP project: dependencies, build output, archives,
+#     local credentials and SQLite files.
+# Why: Definition of Done [CAP-S09] - the folder must stay safe when copied out as a standalone
+#     project; credentials belong to bindings, not to Git.
+# If missing or unlinked: node_modules, gen/, .mtar archives or default-env.json / .env with
+#     real credentials can be committed.
+node_modules/
+gen/
+mta_archives/
+*.mtar
+default-env.json
+.cdsrc-private.json
+.env
+.env.*
+*.sqlite
+*.db
+coverage/
+resources/

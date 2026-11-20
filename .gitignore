@@ -1,0 +1,20 @@
+# What: Files Git must never track in the guide repository: dependencies, build output, archives,
+#     local credentials and databases.
+# Why: Definition of Done [CAP-S09] - no secrets committed; generated artefacts are rebuilt, not versioned.
+# If missing or unlinked: node_modules, gen/ output, .mtar archives or credential files
+#     (default-env.json, .env) can be committed by accident.
+node_modules/
+gen/
+mta_archives/
+*.mtar
+default-env.json
+.cdsrc-private.json
+.env
+.env.*
+*.sqlite
+*.db
+coverage/
+resources/
+.DS_Store
+*.log
+tmp/

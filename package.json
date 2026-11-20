@@ -1,0 +1,32 @@
+{
+  "//": [
+    "What: Root manifest of the CAP complete guide: npm workspaces for every stage, sample and the final app, plus repository-wide scripts (tests, lint, header check, Definition-of-Done report).",
+    "Why: One npm install serves all learning projects while each folder stays a standalone CAP project with its own package.json that can be diffed against the previous stage or copied out.",
+    "If missing or unlinked: Stages cannot be installed or tested from the root; each folder would need its own install and the DoD report and CI have no entry point."
+  ],
+  "name": "cap-complete-guide",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "SAP CAP (Node.js) + Fiori Elements learning path: 10 cumulative stages, standalone samples and a final reference app (ACME Procurement).",
+  "workspaces": [
+    "stage-*",
+    "samples/*",
+    "final-app"
+  ],
+  "engines": {
+    "node": "^22 || ^24"
+  },
+  "scripts": {
+    "test": "npm test --workspaces --if-present",
+    "lint": "eslint . && node scripts/check-file-headers.js",
+    "dod": "node scripts/dod-report.js",
+    "next-stage": "node scripts/copy-stage.js"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^10",
+    "@sap/eslint-plugin-cds": "^4",
+    "eslint": "^10",
+    "globals": "^17"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "//": [
+    "What: npm manifest of stage 01 (basics): CAP runtime, SQLite for development, cds.test for tests, and the start/watch/test scripts.",
+    "Why: [CAP-M01] in CAP 10, cds init no longer writes a package.json; this file makes the folder a runnable Node.js CAP project (cds add nodejs equivalent).",
+    "If missing or unlinked: cds watch cannot resolve @sap/cds or the SQLite driver, npm test has no script, and the folder is no longer a project."
+  ],
+  "name": "procurement-stage-02",
+  "version": "1.0.0",
+  "description": "ACME Procurement - stage 02: full domain model (compositions, associations, enums, code lists, localized and calculated elements).",
+  "private": true,
+  "engines": {
+    "node": "^22 || ^24"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "dependencies": {
+    "@sap/cds": "^10"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^1",
+    "@cap-js/sqlite": "^3",
+    "@sap/cds-dk": "^10"
+  }
+}

@@ -52,7 +52,7 @@ Definition of Done. This README tells you how to *use* the repository and how to
 | 08 | [stage-08-advanced-features](stage-08-advanced-features) | attachments, change tracking, audit log, privacy, outbox + idempotent consumers, S/4 BP replication, telemetry | M07, M08, M15-M19 | ✅ done | 73 |
 | 09 | [stage-09-extensibility-mtx](stage-09-extensibility-mtx) | multitenancy (MTX sidecar, DB per tenant), tenant extensions with rules, extension project | M20, M21 | ✅ done | 80 |
 | 10 | [stage-10-deploy-cicd](stage-10-deploy-cicd) | MTA (multitenant SaaS + HTML5 repo + BTP services), `.mtar` build, deploy script, runbook, CI/CD | M22, M23 | ✅ done | 90 |
-| - | `samples/*` | 7 focused standalone samples ([CAP-S07]) | various | ⏳ pending | - |
+| - | [samples](samples) | 7 focused standalone samples ([CAP-S07]) | M01-M03, M06-M10, M15, M18, M20 | ✅ done | 45 |
 | - | [final-app](final-app) | clean merge of stages 01-10, feature → stage map | all | ✅ done | 90 |
 | - | [docs](docs) | glossary, decision matrix, screenshots, DoD report | - | ✅ started | - |
 | - | [.github/workflows/ci.yml](.github/workflows/ci.yml) | lint + tests on Node 22/24 | M23 | ✅ done | - |
@@ -118,7 +118,7 @@ cap-complete-guide/
 │  └─ dod-report.js             # npm run dod        - Definition-of-Done table -> docs/dod-report.md
 ├─ docs/                        # glossary, decision matrix, screenshots, DoD report
 ├─ stage-01-basics/ ... stage-10-deploy-cicd/      # the 10 stages
-├─ samples/                     # pending - focused standalone samples
+├─ samples/                     # 7 focused standalone samples
 └─ final-app/                   # clean reference app (merge of all stages)
 ```
 
@@ -420,15 +420,15 @@ Build in this order; each stage starts as a copy of the previous one.
 
 ### 7.2 Samples ([CAP-S07])
 
-| Folder | Teaches | Module |
-|--------|---------|--------|
-| [ ] `samples/bookshop-minimal` | smallest CAP app | M01-M03 |
-| [ ] `samples/remote-bp` | remote service + mock + replicate | M08 |
-| [ ] `samples/draft-workflow` | draft + actions + side effects | M03, M06, M09 |
-| [ ] `samples/outbox-events` | outbox + idempotent consumer | M07, M18 |
-| [ ] `samples/multitenant-saas` | MTX | M20 |
-| [ ] `samples/custom-fiori-section` | Fiori Elements extension | M10 |
-| [ ] `samples/attachments` | media / files | M15 |
+| Folder | Teaches | Module | Tests |
+|--------|---------|--------|-------|
+| [x] [samples/bookshop-minimal](samples/bookshop-minimal/README.md) | smallest CAP app | M01-M03 | 5 |
+| [x] [samples/remote-bp](samples/remote-bp/README.md) | remote service + mock + replicate | M08 | 7 |
+| [x] [samples/draft-workflow](samples/draft-workflow/README.md) | draft + actions + side effects | M03, M06, M09 | 8 |
+| [x] [samples/outbox-events](samples/outbox-events/README.md) | outbox + idempotent consumer | M07, M18 | 6 |
+| [x] [samples/multitenant-saas](samples/multitenant-saas/README.md) | MTX | M20 | 6 |
+| [x] [samples/custom-fiori-section](samples/custom-fiori-section/README.md) | Fiori Elements extension | M10 | 6 |
+| [x] [samples/attachments](samples/attachments/README.md) | media / files | M15 | 7 |
 
 Each sample: own `package.json` (picked up by the `samples/*` workspace), README per template,
 tests, `.gitignore`.

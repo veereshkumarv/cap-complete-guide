@@ -1,0 +1,32 @@
+# What: Sample HTTP requests for the attachments sample (VS Code "REST Client" / IntelliJ HTTP client).
+# Why: [CAP-M15] the two-step upload (metadata, then bytes) and the download, clickable.
+# If missing or unlinked: Learners have to reconstruct media URLs from the tests.
+#
+# Start first: npm run watch. Copy the ID from request 1 into @doc.
+
+@P = http://localhost:4004/odata/v4/documents
+
+### 1 Create the document (metadata only)
+POST {{P}}/Documents
+Content-Type: application/json
+
+{ "title": "Quote Bürotec", "fileName": "quote.txt" }
+
+### 2 Upload the bytes
+@doc = replace-with-ID-from-request-1
+PUT {{P}}/Documents({{doc}})/content
+Content-Type: text/plain
+
+Quote: 4 office chairs, 759.60 EUR
+
+### 3 Download - note Content-Type and Content-Disposition
+GET {{P}}/Documents({{doc}})/content
+
+### 4 Metadata incl. size - no bytes in the JSON
+GET {{P}}/Documents({{doc}})
+
+### 5 Not allowed -> 415
+PUT {{P}}/Documents({{doc}})/content
+Content-Type: application/x-msdownload
+
+MZ

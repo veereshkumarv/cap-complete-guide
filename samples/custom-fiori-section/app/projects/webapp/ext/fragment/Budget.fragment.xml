@@ -1,0 +1,22 @@
+<!--
+What: Custom Object Page section "Budget": a progress bar of spent vs. budget, coloured by state,
+    and the remaining (or exceeded) amount.
+Why: [CAP-M10] a visualisation that UI annotations do not offer - added through the manifest
+    (content.body.sections) as an XML fragment bound to the page's object; formatters come from
+    BudgetFormatter.js via core:require.
+If missing or unlinked: The Object Page fails to render the section ("could not find fragment"),
+    the rest of the page keeps working.
+-->
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
+  <!-- core:require must sit on a control, not on FragmentDefinition; targetType 'any' passes the raw
+       decimal ("131000.00") instead of the locale-formatted text ("131,000.00") to the formatters -->
+  <VBox id="budgetBox" class="sapUiSmallMargin" core:require="{ fmt: 'sample/projects/ext/fragment/BudgetFormatter' }">
+    <ProgressIndicator id="budgetBar" width="36rem" showValue="true"
+        percentValue="{ parts: [{ path: 'spent', targetType: 'any' }, { path: 'budget', targetType: 'any' }], formatter: 'fmt.percent' }"
+        displayValue="{ parts: [{ path: 'spent', targetType: 'any' }, { path: 'budget', targetType: 'any' }], formatter: 'fmt.label' }"
+        state="{ parts: [{ path: 'spent', targetType: 'any' }, { path: 'budget', targetType: 'any' }], formatter: 'fmt.state' }"/>
+    <ObjectStatus id="budgetRemaining"
+        text="{ parts: [{ path: 'spent', targetType: 'any' }, { path: 'budget', targetType: 'any' }, 'currency_code'], formatter: 'fmt.remaining' }"
+        state="{ parts: [{ path: 'spent', targetType: 'any' }, { path: 'budget', targetType: 'any' }], formatter: 'fmt.state' }"/>
+  </VBox>
+</core:FragmentDefinition>

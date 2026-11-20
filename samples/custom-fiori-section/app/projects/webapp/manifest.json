@@ -1,0 +1,157 @@
+{
+  "//": [
+    "What: UI5 application descriptor of the projects app: OData V4 data source, List Report / Object Page routing, the custom Budget section (content.body.sections) and the Object Page controller extension (sap.ui.controllerExtensions).",
+    "Why: [CAP-M10] extensions are registered here, by name and position - the annotation-driven page stays upgrade-safe around them.",
+    "If missing or unlinked: The component cannot start; without the extension entries the Budget section and the save confirmation are gone."
+  ],
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "sample.projects",
+    "type": "application",
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "dataSources": {
+      "ProjectService": {
+        "uri": "/odata/v4/projects/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.148.0",
+      "libs": {
+        "sap.m": {},
+        "sap.fe.templates": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "sample.projects.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "ProjectService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      }
+    },
+    "routing": {
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "ProjectsList",
+          "target": "ProjectsList"
+        },
+        {
+          "pattern": "Projects({key}):?query:",
+          "name": "ProjectsObjectPage",
+          "target": "ProjectsObjectPage"
+        }
+      ],
+      "targets": {
+        "ProjectsList": {
+          "type": "Component",
+          "id": "ProjectsList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/Projects",
+              "variantManagement": "None",
+              "initialLoad": "Enabled",
+              "navigation": {
+                "Projects": {
+                  "detail": {
+                    "route": "ProjectsObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable",
+                    "selectionMode": "Single"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ProjectsObjectPage": {
+          "type": "Component",
+          "id": "ProjectsObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/Projects",
+              "editableHeaderContent": false,
+              "controlConfiguration": {
+                "milestones/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable",
+                    "creationMode": {
+                      "name": "Inline"
+                    }
+                  }
+                }
+              },
+              "content": {
+                "body": {
+                  "sections": {
+                    "Budget": {
+                      "template": "sample.projects.ext.fragment.Budget",
+                      "title": "{i18n>budgetSection}",
+                      "position": {
+                        "placement": "After",
+                        "anchor": "General"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "extends": {
+      "extensions": {
+        "sap.ui.controllerExtensions": {
+          "sap.fe.templates.ObjectPage.ObjectPageController#sample.projects::ProjectsObjectPage": {
+            "controllerName": "sample.projects.ext.controller.ObjectPageExt"
+          }
+        }
+      }
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
+  }
+}

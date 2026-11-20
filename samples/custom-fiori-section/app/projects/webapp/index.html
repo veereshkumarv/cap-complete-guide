@@ -1,0 +1,23 @@
+<!doctype html>
+<!--
+What: Standalone start page of the projects app (http://localhost:4004/projects/webapp/index.html).
+Why: [CAP-S07] lets cds watch serve the extended Fiori app without a launchpad; UI5 1.148 LTS from the CDN.
+If missing or unlinked: The app cannot be opened locally.
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projects</title>
+  <style>html, body, body > div, #container, #container-uiarea { height: 100%; }</style>
+  <script id="sap-ui-bootstrap" src="https://ui5.sap.com/1.148.13/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_horizon"
+    data-sap-ui-compat-version="edge"
+    data-sap-ui-async="true"
+    data-sap-ui-on-init="module:sap/ui/core/ComponentSupport"
+    data-sap-ui-resource-roots='{"sample.projects":"./"}'></script>
+</head>
+<body class="sapUiBody">
+  <div data-sap-ui-component data-name="sample.projects" data-id="container" data-settings='{"id":"projects"}'></div>
+</body>
+</html>

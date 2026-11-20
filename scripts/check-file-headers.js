@@ -19,8 +19,7 @@ const EXCEPTIONS = [
   { pattern: /(^|\/)package-lock\.json$/, reason: 'rewritten by npm on every install' },
   { pattern: /^\.nvmrc$/, reason: 'version managers read the single line verbatim; documented in README' },
   { pattern: /^CAP_DEVELOPMENT_GUIDE\.md$/, reason: 'the master guide supplied by the user; its YAML front matter states purpose and status' },
-  { pattern: /(^|\/)db\/data\/[^/]+\.csv$/, reason: "CAP's CSV loader reads every line as data; data files are described in each folder README" },
-  { pattern: /(^|\/)test\/data\/[^/]+\.csv$/, reason: "CAP's CSV loader reads every line as data; described in the folder README" },
+  { pattern: /(^|\/)data\/[^/]+\.csv$/, reason: "CAP's CSV loader reads every line as data (db/data, srv/external/data, test/data); described in each folder README" },
   { pattern: /(^|\/)xs-security\.json$/, reason: 'XSUAA rejects unknown keys in the security descriptor; described in the folder README' },
 ];
 const BINARY = /\.(png|jpe?g|gif|ico|pdf|zip|mtar|sqlite|db)$/i;

@@ -15,6 +15,7 @@ const ALLOWED = ['application/pdf', 'image/png', 'image/jpeg', 'text/plain'];
 module.exports = class DocumentService extends cds.ApplicationService {
   init() {
     const { Documents } = this.entities;
+    const sizes = new WeakMap(); // request -> bytes counted while streaming
 
     this.before('UPDATE', Documents, (req) => {
       const { content } = req.data;
@@ -26,15 +27,20 @@ module.exports = class DocumentService extends cds.ApplicationService {
       if (declared > MAX_BYTES) return req.reject(413, 'The file is larger than 1 MB.');
 
       // Content-Length can be absent or wrong (chunked uploads): count the bytes while streaming.
-      let size = 0;
+      sizes.set(req, 0);
       req.data.content = content.pipe(new Transform({
         transform(chunk, _encoding, done) {
-          size += chunk.length;
+          const size = sizes.get(req) + chunk.length;
+          sizes.set(req, size);
           if (size > MAX_BYTES) return done(cds.error(413, 'The file is larger than 1 MB.'));
           done(null, chunk);
         },
       }));
-      req.on('succeeded', () => UPDATE(Documents, req.data.ID).with({ size }).catch(() => {}));
+    });
+
+    // the stream has been written by now - store its size in the same transaction
+    this.after('UPDATE', Documents, async (_, req) => {
+      if (sizes.has(req)) await UPDATE(Documents, req.data.ID).with({ size: sizes.get(req) });
     });
 
     return super.init();

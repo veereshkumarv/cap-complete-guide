@@ -1,0 +1,26 @@
+<!doctype html>
+<!--
+What: Standalone start page of the "Manage Purchase Orders" app for local development
+    (http://localhost:4004/procurement/webapp/index.html).
+Why: [CAP-STAGE-05] lets cds watch serve and test the Fiori app without a launchpad; UI5 1.148 (LTS)
+    is loaded from the SAP CDN.
+If missing or unlinked: The app can only run inside a launchpad / HTML5 repository; local testing
+    and the screenshots of this stage are not possible.
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage Purchase Orders</title>
+  <style>html, body, body > div, #container, #container-uiarea { height: 100%; }</style>
+  <script id="sap-ui-bootstrap" src="https://ui5.sap.com/1.148.13/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_horizon"
+    data-sap-ui-compat-version="edge"
+    data-sap-ui-async="true"
+    data-sap-ui-on-init="module:sap/ui/core/ComponentSupport"
+    data-sap-ui-resource-roots='{"acme.procurement":"./"}'></script>
+</head>
+<body class="sapUiBody">
+  <div data-sap-ui-component data-name="acme.procurement" data-id="container" data-settings='{"id":"procurement"}'></div>
+</body>
+</html>

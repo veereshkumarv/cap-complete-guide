@@ -1,0 +1,19 @@
+<!--
+What: Custom object-page section "Approval History": the decisions of an order as a list, newest
+    first (approver, decision, comment, date).
+Why: [CAP-M10] demonstrates a Fiori Elements extension (custom section via manifest + XML fragment)
+    for content the annotation-based facets do not cover well; no controller code is needed.
+If missing or unlinked: The object page fails to render the section ("could not find fragment")
+    while the rest of the page keeps working.
+-->
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
+  <List id="approvalHistory"
+        items="{ path: 'approvals', parameters: { $orderby: 'createdAt desc' }, templateShareable: false }"
+        noDataText="{i18n>noApprovals}" showSeparators="Inner">
+    <ObjectListItem title="{decision}" number="{approver}"
+                    numberState="{= ${decision} === 'Approved' ? 'Success' : 'Error' }">
+      <ObjectAttribute text="{comment}"/>
+      <ObjectAttribute text="{ path: 'createdAt', type: 'sap.ui.model.odata.type.DateTimeOffset', formatOptions: { style: 'medium' } }"/>
+    </ObjectListItem>
+  </List>
+</core:FragmentDefinition>

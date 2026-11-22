@@ -21,7 +21,8 @@
     "test": "npm test --workspaces --if-present",
     "lint": "eslint . && node scripts/check-file-headers.js",
     "dod": "node scripts/dod-report.js",
-    "next-stage": "node scripts/copy-stage.js"
+    "next-stage": "node scripts/copy-stage.js",
+    "new-project": "node scripts/new-project.js"
   },
   "devDependencies": {
     "@sap/cds-dk": "^10",

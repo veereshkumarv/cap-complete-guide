@@ -22,6 +22,8 @@ Fiori UI.
 | [glossary.md](glossary.md) | CAP / BTP terms (copy of [CAP-S12]) | by hand - keep in sync with the master guide |
 | [decision-matrix.md](decision-matrix.md) | when to use / avoid / impact + decision rules (copy of [CAP-S13], 11.3) | by hand - keep in sync |
 | [security-guardrails.md](security-guardrails.md) | security and S/4HANA-access review: fixed findings with their tests, guardrails required before production | by hand - update when features or findings change |
+| [client-demo-guide.md](client-demo-guide.md) | step-by-step client demo: storyline, commands, value message, effort worksheet, honest limits | by hand |
+| [client-adoption-guide.md](client-adoption-guide.md) | step-by-step adoption in a client environment: hosting, template (`npm run new-project`), daily workflows, CI, BTP/S4, maintenance, rollout | by hand |
 | [dod-report.md](dod-report.md) | pass/fail table of the Definition of Done for every folder | generated: `npm run dod` |
 | [images/](images) | screenshots of UI stages, named `<folder>-<view>.png` | by hand / headless browser (see stage 05 README) |
 

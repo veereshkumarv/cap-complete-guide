@@ -338,6 +338,7 @@ Each folder still has its own `package.json` and can be copied out as an indepen
 | CDS lint for one stage | `cd <stage> && npx cds lint .` |
 | Definition-of-Done report | `npm run dod` (all) / `npm run dod -- --only stage-05-fiori-elements` / `npm run dod -- --skip-tests` |
 | start a new stage | `npm run next-stage -- <from> <to> "description"` |
+| start a client project from the final app (outside this repo) | `npm run new-project -- ../my-app my-app` |
 
 ### Compare two stages
 
@@ -402,6 +403,7 @@ and correctness review followed; its fixes are in the code (with regression test
 | [x] [samples/attachments](samples/attachments/README.md) | media / files | M15 | 10 |
 
 - [x] `final-app/` - merge of all stages with a *feature → stage → module* table
+- [x] Client material: [demo guide](docs/client-demo-guide.md) and [adoption guide](docs/client-adoption-guide.md) (`npm run new-project`)
 - [x] `docs/` - glossary, decision matrix, screenshots, [security guardrails](docs/security-guardrails.md),
   [Definition-of-Done report](docs/dod-report.md) (`npm run dod`)
 - [x] CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)): lint + all tests on Node 22 and 24

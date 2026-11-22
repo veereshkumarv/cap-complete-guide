@@ -17,6 +17,22 @@ module.exports = class DocumentService extends cds.ApplicationService {
     const { Documents } = this.entities;
     const sizes = new WeakMap(); // request -> bytes counted while streaming
 
+    // Metadata (POST / PATCH): files only through the media stream (PUT .../content) - otherwise a
+    // JSON body with base64 content would bypass every check below (security review). A media type
+    // set separately must be allowed too, or the stored file would be served as e.g. text/html.
+    this.before(['CREATE', 'UPDATE'], Documents, (req) => {
+      const { content, mimeType } = req.data;
+      const url = req.http?.req?.originalUrl ?? '';
+      const mediaPath = /\/(content|\$value)(\?|$)/.test(url); // PUT .../content streams the file
+      if (content !== undefined && content !== null && req.http && !mediaPath) {
+        return req.reject(400, 'Upload the file with PUT .../content, not inside the JSON body.');
+      }
+      if (mimeType !== undefined && mimeType !== null && !ALLOWED.includes(String(mimeType).split(';')[0].trim())) {
+        return req.reject(415, `File type "${mimeType}" is not allowed (${ALLOWED.join(', ')}).`);
+      }
+      if (content === null) req.data.size = null; // file removed - no stale size
+    });
+
     this.before('UPDATE', Documents, (req) => {
       const { content } = req.data;
       if (content === undefined || content === null) return; // metadata update, or file removed

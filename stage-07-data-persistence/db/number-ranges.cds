@@ -1,7 +1,8 @@
 /**
  * What: NumberRanges - one row per numbered business object holding the last number issued.
  * Why: [CAP-M05] the guide's `PO-${Date.now()}` is a placeholder; a counter row updated inside the
- *     request transaction gives gap-free, readable, collision-free order numbers.
+ *     request transaction gives sequential, readable, collision-free order numbers (gaps only for
+ *     discarded drafts, which draw a number at creation).
  * If missing or unlinked: srv/lib/number-range.js cannot draw numbers and creating a purchase
  *     order draft fails.
  */

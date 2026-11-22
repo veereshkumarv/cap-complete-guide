@@ -1,8 +1,9 @@
 /**
  * What: Draws the next number of a number range (e.g. PO-1000005) from the NumberRanges table.
- * Why: [CAP-M05] readable, gap-free business numbers. The UPDATE ... SET current = current + 1 runs
- *     inside the request transaction, so the row lock serialises concurrent requests and a
- *     rollback also returns the number.
+ * Why: [CAP-M05] readable, sequential, collision-free business numbers. The UPDATE ... SET current =
+ *     current + 1 runs inside the request transaction, so the row lock serialises concurrent
+ *     requests and a rollback also returns the number. Not gap-free: the number is drawn when the
+ *     draft is created, so a discarded draft leaves a gap (draw it at activation if gaps matter).
  * If missing or unlinked: New purchase-order drafts get no order number (the NEW handler fails).
  */
 const cds = require('@sap/cds');

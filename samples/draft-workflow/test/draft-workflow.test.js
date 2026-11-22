@@ -85,4 +85,19 @@ describe('Fiori app and annotations', () => {
     }
     expect(data).to.match(/<PropertyPath>total<\/PropertyPath>|<String>total<\/String>/);
   });
+
+  it('does not let a submitted or approved report be edited (review S2)', async () => {
+    const err = await fail(POST(`${active(R2)}/ExpenseService.draftEdit`, { PreserveChanges: true }));
+    expect(err.status).to.equal(409);
+  });
+
+  it('refuses a status change while an edit draft is open (review S1)', async () => {
+    const { data: r } = await POST(`${S}/ExpenseReports`, { title: 'Open draft' });
+    await POST(`${draft(r.ID)}/items`, { category: 'Travel', amount: 30 });
+    await POST(`${draft(r.ID)}/ExpenseService.draftActivate`, {});
+    await POST(`${active(r.ID)}/ExpenseService.draftEdit`, { PreserveChanges: true });
+    const err = await fail(POST(`${active(r.ID)}/ExpenseService.submit`, {}));
+    expect(err.status).to.equal(409);
+    expect(err.message).to.contain('being edited');
+  });
 });

@@ -15,7 +15,7 @@ entity Authors : cuid, managed {
 
 entity Books : cuid, managed {
   title  : String(150) @mandatory;
-  author : Association to Authors @mandatory;
+  author : Association to Authors @mandatory @assert.target; // the author must exist - no orphan books
   stock  : Integer @assert.range: [0, 99999];
   price  : Decimal(9, 2);
 }

@@ -25,3 +25,4 @@ Compare: `git diff --no-index stage-05-fiori-elements stage-06-security`
 | `../docs/images/stage-06-security-*.png` | added | screenshots as alice and bob |
 | `../scripts/check-file-headers.js` | changed | `xs-app.json` exempt from headers (strict approuter schema) |
 | `../scripts/copy-stage.js` | changed | rewrites the stage number in the `package.json` header |
+| `test/guardrails.test.js` and the files it covers | added / fixed later | 11 regression tests for the fixes of the [security and code review](../docs/security-guardrails.md) (applied to every stage where the code exists) |

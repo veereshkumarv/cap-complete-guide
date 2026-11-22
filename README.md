@@ -1,7 +1,7 @@
 <!--
 What: Entry point of the CAP complete guide repository: what it teaches, current build status,
-    step-by-step learning path through the stages, how to install, run, test, diff and lint, and the
-    exact procedure for building the pending stages, samples and the final app.
+    step-by-step learning path through the stages, how to install, run, test, diff and lint, the
+    security guardrails, and the procedure for extending the guide with new stages or samples.
 Why: [CAP-S04] / [CAP-S15] step 1 - the repository layout requires a root README as overview, index
     and "how to run stages"; contributors need one place that says what is done and what is next.
 If missing or unlinked: Newcomers do not know where to start or how the stages relate, and
@@ -30,8 +30,8 @@ Definition of Done. This README tells you how to *use* the repository and how to
 4. [Repository layout](#4-repository-layout)
 5. [Step-by-step learning path](#5-step-by-step-learning-path)
 6. [Working with the repository](#6-working-with-the-repository)
-7. [Continuing the guide - pending work](#7-continuing-the-guide---pending-work)
-8. [How to build the next stage (procedure)](#8-how-to-build-the-next-stage-procedure)
+7. [Status of the guide and what remains](#7-status-of-the-guide-and-what-remains)
+8. [How to extend the guide (procedure)](#8-how-to-extend-the-guide-procedure)
 9. [Conventions](#9-conventions)
 10. [Troubleshooting](#10-troubleshooting)
 11. [References](#11-references)
@@ -45,20 +45,21 @@ Definition of Done. This README tells you how to *use* the repository and how to
 | 01 | [stage-01-basics](stage-01-basics) | project setup, first entity and service | M01, M04 | ✅ done | 3 |
 | 02 | [stage-02-domain-modeling](stage-02-domain-modeling) | full domain model, CSV data (en/de) | M02 | ✅ done | 7 |
 | 03 | [stage-03-services](stage-03-services) | ProcurementService (draft), AdminService | M03, M04 | ✅ done | 8 |
-| 04 | [stage-04-custom-logic](stage-04-custom-logic) | handlers, actions, events, number range, remote S/4 BP (mocked) | M05-M08 | ✅ done | 21 |
-| 05 | [stage-05-fiori-elements](stage-05-fiori-elements) | List Report / Object Page, annotations, custom section | M09, M10, M14 | ✅ done | 26 |
-| 06 | [stage-06-security](stage-06-security) | roles, `@restrict`, instance-based auth, mocked users, XSUAA, approuter | M11 | ✅ done | 47 |
-| 07 | [stage-07-data-persistence](stage-07-data-persistence) | SAP HANA Cloud (HDI), production build, native index, search, paging, perf check | M12, M13 | ✅ done | 55 |
-| 08 | [stage-08-advanced-features](stage-08-advanced-features) | attachments, change tracking, audit log, privacy, outbox + idempotent consumers, S/4 BP replication, telemetry | M07, M08, M15-M19 | ✅ done | 73 |
-| 09 | [stage-09-extensibility-mtx](stage-09-extensibility-mtx) | multitenancy (MTX sidecar, DB per tenant), tenant extensions with rules, extension project | M20, M21 | ✅ done | 80 |
-| 10 | [stage-10-deploy-cicd](stage-10-deploy-cicd) | MTA (multitenant SaaS + HTML5 repo + BTP services), `.mtar` build, deploy script, runbook, CI/CD | M22, M23 | ✅ done | 90 |
-| - | [samples](samples) | 7 focused standalone samples ([CAP-S07]) | M01-M03, M06-M10, M15, M18, M20 | ✅ done | 45 |
-| - | [final-app](final-app) | clean merge of stages 01-10, feature → stage map | all | ✅ done | 90 |
-| - | [docs](docs) | glossary, decision matrix, screenshots, DoD report | - | ✅ started | - |
+| 04 | [stage-04-custom-logic](stage-04-custom-logic) | handlers, actions, events, number range, remote S/4 BP (mocked) | M05-M08 | ✅ done | 30 |
+| 05 | [stage-05-fiori-elements](stage-05-fiori-elements) | List Report / Object Page, annotations, custom section | M09, M10, M14 | ✅ done | 35 |
+| 06 | [stage-06-security](stage-06-security) | roles, `@restrict`, instance-based auth, mocked users, XSUAA, approuter | M11 | ✅ done | 58 |
+| 07 | [stage-07-data-persistence](stage-07-data-persistence) | SAP HANA Cloud (HDI), production build, native index, search, paging, perf check | M12, M13 | ✅ done | 66 |
+| 08 | [stage-08-advanced-features](stage-08-advanced-features) | attachments, change tracking, audit log, privacy, outbox + idempotent consumers, S/4 BP replication, telemetry | M07, M08, M15-M19 | ✅ done | 91 |
+| 09 | [stage-09-extensibility-mtx](stage-09-extensibility-mtx) | multitenancy (MTX sidecar, DB per tenant), tenant extensions with rules, extension project | M20, M21 | ✅ done | 98 |
+| 10 | [stage-10-deploy-cicd](stage-10-deploy-cicd) | MTA (multitenant SaaS + HTML5 repo + BTP services), `.mtar` build, deploy script, runbook, CI/CD | M22, M23 | ✅ done | 108 |
+| - | [samples](samples) | 7 focused standalone samples ([CAP-S07]) | M01-M03, M06-M10, M15, M18, M20 | ✅ done | 53 |
+| - | [final-app](final-app) | clean merge of stages 01-10, feature → stage map | all | ✅ done | 108 |
+| - | [docs](docs) | glossary, decision matrix, screenshots, security guardrails, DoD report | - | ✅ done | - |
 | - | [.github/workflows/ci.yml](.github/workflows/ci.yml) | lint + tests on Node 22/24 | M23 | ✅ done | - |
 
-Verified with `@sap/cds` 10.2.2, `@sap/cds-dk` 10.2.1, `@cap-js/sqlite` 3.1.3, Node 24/26, SAPUI5
-1.148 LTS. Details of what is pending: [section 7](#7-continuing-the-guide---pending-work).
+Verified with `@sap/cds` 10.2.2, `@sap/cds-dk` 10.2.1, `@cap-js/sqlite` 3.1.3, SAPUI5 1.148 LTS;
+CI runs Node 22 and 24 (the supported `engines`). What remains: [section 7](#7-status-of-the-guide-and-what-remains);
+security: [docs/security-guardrails.md](docs/security-guardrails.md).
 
 ---
 
@@ -204,7 +205,7 @@ service (S/4HANA Business Partner) mocked from CSV.
 cd stage-04-custom-logic
 npm run watch                       # note "mocking API_BUSINESS_PARTNER" in the log
 # requests.http 9-14: submit as alice, approve as bob, invalid transition in German, remote suppliers
-npm test                            # 21 tests
+npm test                            # 30 tests
 ```
 
 Look at: `srv/procurement-service.js`, `srv/lib/status.js` (the state machine as a table),
@@ -220,7 +221,7 @@ cd stage-05-fiori-elements
 npm run watch
 open http://localhost:4004/procurement/webapp/index.html          # macOS; or paste into a browser
 open "http://localhost:4004/procurement/webapp/index.html?sap-language=de"
-npm test                            # 26 tests incl. annotation and draft UI flow
+npm test                            # 35 tests incl. annotation and draft UI flow
 ```
 
 Try: Create → pick supplier → add item (price is defaulted, total refreshes) → Save → Submit →
@@ -240,7 +241,7 @@ cd stage-06-security
 npm run watch
 # browser: log in as alice (Requester), bob (Approver), carol (Buyer), dave (Admin), erin (Auditor) - empty password
 # requests.http 18-24: 401 / 404 / 403 cases
-npm test                            # 47 tests incl. the role x operation matrix
+npm test                            # 58 tests incl. the role x operation matrix
 ```
 
 Look at: `srv/authorizations.cds`, `test/authz.test.js` (the matrix), `xs-security.json`.
@@ -255,7 +256,7 @@ You learn: SQLite in development vs SAP HANA Cloud in production (profiles), `cd
 cd stage-07-data-persistence
 npm run build                       # = cds build --production -> gen/db (HDI), gen/srv
 npm run perf                        # timings of the Fiori queries on 20,000 orders
-npm test                            # 55 tests incl. search, paging and the production build
+npm test                            # 66 tests incl. search, paging and the production build
 ```
 
 Look at: `srv/query-options.cds`, `db/src/`, [docs/hana-notes.md](stage-07-data-persistence/docs/hana-notes.md)
@@ -273,7 +274,7 @@ business rule (blocked suppliers).
 cd stage-08-advanced-features
 NO_TELEMETRY=true npm run watch     # without NO_TELEMETRY: a trace per request
 # requests.http 29-39: change history, attachments, notifications, replication, audit log
-npm test                            # 73 tests incl. outbox commit/rollback and idempotency
+npm test                            # 91 tests incl. outbox commit/rollback and idempotency
 ```
 
 Look at: `db/extensions.cds`, `db/change-tracking.cds`, `db/data-privacy.cds`, `srv/integration/`.
@@ -290,7 +291,7 @@ provider rules (`x_` prefix, allowlist) and the customer's extension project (`c
 cd stage-09-extensibility-mtx
 npm run watch:sidecar               # terminal 1 (port 4005)
 npm run subscribe && npm run watch:mtx   # terminal 2: tenants t1, t2; app on 4004
-npm test                            # 80 tests incl. a two-tenant end-to-end run
+npm test                            # 98 tests incl. a two-tenant end-to-end run
 ```
 
 Look at: `mtx/sidecar/package.json`, `ext-sample/`, `test/mtx.test.js`.
@@ -304,7 +305,7 @@ hook, approuter, HTML5 repository, BTP services), building the `.mtar` with `mbt
 ```sh
 cd stage-10-deploy-cicd
 npm run build:mtar                  # -> mta_archives/procurement-stage-10_1.0.0.mtar (2-3 min)
-npm test                            # 90 tests incl. static checks of mta.yaml, routes and workflows
+npm test                            # 108 tests incl. static checks of mta.yaml, routes and workflows
 # manual (BTP): cf login ... && npm run deploy  - see docs/runbook.md
 ```
 
@@ -377,121 +378,84 @@ Stages 01-05: mocked authentication accepts any user name with an empty password
 
 ---
 
-## 7. Continuing the guide - pending work
+## 7. Status of the guide and what remains
 
-Checklist derived from [CAP_DEVELOPMENT_GUIDE.md](CAP_DEVELOPMENT_GUIDE.md) Sections 4, 6, 7 and 15.
-Build in this order; each stage starts as a copy of the previous one.
+Everything specified in [CAP_DEVELOPMENT_GUIDE.md](CAP_DEVELOPMENT_GUIDE.md) Sections 4, 6, 7 and 15
+is built: stages 01-10, the seven samples, the final app, `docs/` and CI. A security, S/4HANA-access
+and correctness review followed; its fixes are in the code (with regression tests in
+`test/guardrails.test.js` of every affected stage) and its open items are listed in
+[docs/security-guardrails.md](docs/security-guardrails.md).
 
-### 7.1 Stages
+### 7.1 Done
 
-- [x] **stage-06-security** ([CAP-STAGE-06], [CAP-M11], [CAP-DEC-07]) - done; notes below kept for reference
-  - `srv/authorizations.cds`: `@requires: 'authenticated-user'` on the services; `@restrict` on
-    `PurchaseOrders` per role (Requester: own orders `where: 'createdBy = $user'`; Approver:
-    `READ`, `approve`, `reject`; Buyer: `READ`, `send`, master data; Admin: `*`; Auditor: `READ`
-    incl. `ApprovalLog`); AdminService for Buyer/Admin.
-  - `package.json`: `cds.requires.auth` mocked users per role (alice=Requester, bob=Approver,
-    carol=Buyer, dave=Admin, erin=Auditor); `[production]` auth `xsuaa` (or `ias` - check docs).
-  - `xs-security.json` (`cds add xsuaa`, scopes + role templates), `app/router/` (`xs-app.json`,
-    approuter `package.json`), `test/authz.test.js` - role × operation matrix, 401 / 403.
-  - README: role matrix, auth flow sequence diagram, dev vs prod auth, impact of missing restrictions.
-- [x] **stage-07-data-persistence** ([CAP-STAGE-07], [CAP-M12], [CAP-M13], [CAP-DEC-08]) - done
-  - `cds add hana` (`@cap-js/hana`, `[production]` db kind `hana`); `@cds.search` on POs and
-    products; `@cds.query.limit`; optional native artefact in `db/src/`; performance test script;
-    `docs/hana-notes.md`.
-  - Acceptance: `cds build --production` creates `gen/db` with HDI artefacts; hybrid run
-    (`cds bind`, `cds watch --profile hybrid`) documented as *manual* (needs BTP).
-  - README: SQLite vs HANA differences, schema-evolution warning (`.hdbmigrationtable`), indexes.
-- [x] **stage-08-advanced-features** ([CAP-STAGE-08], [CAP-M07], [CAP-M15]-[CAP-M19]) - done
-  - Attachments (`@cap-js/attachments` or `LargeBinary` + `@Core.MediaType`), change tracking
-    (`@cap-js/change-tracking`, `@changelog`), audit logging (`@cap-js/audit-logging`),
-    `@PersonalData` on `SupplierContacts`, outbox for `POApproved` / remote calls, telemetry
-    (`@cap-js/telemetry`), `srv/integration/` Business Partner replication handler (idempotent).
-  - Acceptance: change history visible in the UI; outbox message persisted then delivered;
-    attachment upload/download; idempotency test; screenshots.
-- [x] **stage-09-extensibility-mtx** ([CAP-STAGE-09], [CAP-M20], [CAP-M21], [CAP-DEC-09]) - done
-  - `cds add multitenancy` (`@sap/cds-mtxs`, sidecar), extensibility with `extension-allowlist`,
-    sample extension project `ext-sample/`, `scripts/subscribe.sh` for local tenants.
-  - Acceptance: local MTX with two tenants shows isolated data; extension field in tenant A only.
-- [ ] **stage-10-deploy-cicd** ([CAP-STAGE-10], [CAP-M22], [CAP-M23])
-  - `cds add mta,approuter,xsuaa,hana,html5-repo` (check facet names with `npx cds add --help`),
-    `mta.yaml`, `scripts/deploy.sh`, `docs/runbook.md`, stage CI workflow.
-  - Acceptance: `mbt build` produces an `.mtar`; deployment documented (manual without BTP); CI green.
-  - README: deployment diagram, quotas, rollback (blue-green), post-deploy smoke tests.
-
-### 7.2 Samples ([CAP-S07])
+- [x] Stages 01-10 - each with README (13 template sections), CHANGELOG, tests, requests, screenshots for UI stages
+- [x] Samples ([CAP-S07]):
 
 | Folder | Teaches | Module | Tests |
 |--------|---------|--------|-------|
-| [x] [samples/bookshop-minimal](samples/bookshop-minimal/README.md) | smallest CAP app | M01-M03 | 5 |
-| [x] [samples/remote-bp](samples/remote-bp/README.md) | remote service + mock + replicate | M08 | 7 |
-| [x] [samples/draft-workflow](samples/draft-workflow/README.md) | draft + actions + side effects | M03, M06, M09 | 8 |
+| [x] [samples/bookshop-minimal](samples/bookshop-minimal/README.md) | smallest CAP app | M01-M03 | 6 |
+| [x] [samples/remote-bp](samples/remote-bp/README.md) | remote service + mock + replicate | M08 | 9 |
+| [x] [samples/draft-workflow](samples/draft-workflow/README.md) | draft + actions + side effects | M03, M06, M09 | 10 |
 | [x] [samples/outbox-events](samples/outbox-events/README.md) | outbox + idempotent consumer | M07, M18 | 6 |
 | [x] [samples/multitenant-saas](samples/multitenant-saas/README.md) | MTX | M20 | 6 |
 | [x] [samples/custom-fiori-section](samples/custom-fiori-section/README.md) | Fiori Elements extension | M10 | 6 |
-| [x] [samples/attachments](samples/attachments/README.md) | media / files | M15 | 7 |
+| [x] [samples/attachments](samples/attachments/README.md) | media / files | M15 | 10 |
 
-Each sample: own `package.json` (picked up by the `samples/*` workspace), README per template,
-tests, `.gitignore`.
+- [x] `final-app/` - merge of all stages with a *feature → stage → module* table
+- [x] `docs/` - glossary, decision matrix, screenshots, [security guardrails](docs/security-guardrails.md),
+  [Definition-of-Done report](docs/dod-report.md) (`npm run dod`)
+- [x] CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)): lint + all tests on Node 22 and 24
 
-### 7.3 Final app and wrap-up ([CAP-STAGE-FINAL], [CAP-S15])
+### 7.2 What remains (needs SAP BTP or decisions of your organisation)
 
-- [ ] `final-app/` - clean copy of stage 10 with a README: architecture, run locally, deploy to
-  BTP CF, and a table *feature → stage → module*.
-- [ ] `docs/images/` - screenshots for every UI stage (06+, final app, UI samples).
-- [ ] Run `npm run dod` and commit `docs/dod-report.md` (pass/fail table for every folder).
-- [ ] Report unverified assumptions (anything not checked against the live CAP docs) - each stage
-  README's *Deviations from guide* section.
-- [ ] Update the status table in [section 1](#1-build-status) and the learning path in
-  [section 5](#5-step-by-step-learning-path) as stages are finished.
+| Item | Why open | Where |
+|------|----------|-------|
+| Real deployment to SAP BTP Cloud Foundry, subscription of a consumer tenant | no BTP access while writing; everything up to the `.mtar` is verified | [stage-10 runbook](stage-10-deploy-cicd/docs/runbook.md) |
+| Production guardrails that are configuration in BTP / S/4HANA (destinations, principal propagation, Cloud Connector, Event Mesh namespace, role collections, custom domain, CI secrets) | environment-specific | [docs/security-guardrails.md § 3](docs/security-guardrails.md#3-guardrails-required-before-production) |
+| Verify the *Deviations from guide* of each stage against the live CAP documentation | CAP evolves; some items are marked *not verified* | each stage README |
 
 ---
 
-## 8. How to build the next stage (procedure)
+## 8. How to extend the guide (procedure)
 
-The same loop for every stage ([CAP-S15] step 2). Example: stage 10 (the next pending one).
+The loop used for every stage ([CAP-S15] step 2) - use it for a new stage (e.g. `stage-11-ias-ams`)
+or a new sample.
 
-1. **Read the spec** - [CAP-STAGE-10] in Section 6 of the master guide and the modules it names
-   ([CAP-M22], [CAP-M23]). Note the *Files*, *Acceptance* and *README must include* lists.
+1. **Write the spec first** - add the stage to Section 6 of the master guide (*Goal, Files,
+   Acceptance, README must include*) and name the modules it teaches.
 2. **Verify against the live docs** ([CAP-VERIFY]) - CAP changes quickly:
    ```sh
    npx cds version
-   npx cds add --help          # available facets (xsuaa, ias, hana, mta, multitenancy, ...)
+   npx cds add --help          # available facets (xsuaa, ias, ams, hana, mta, multitenancy, ...)
    ```
-   Open the reference URL of the module. If docs and guide disagree, **the docs win** - record it
-   under *Deviations from guide* in the stage README.
-3. **Copy the previous stage**:
+   If docs and guide disagree, **the docs win** - record it under *Deviations from guide*.
+3. **Copy the previous stage** (or start a sample folder under `samples/`):
    ```sh
-   npm run next-stage -- stage-09-extensibility-mtx stage-10-deploy-cicd \
-     "ACME Procurement - stage 10: MTA deployment to SAP BTP Cloud Foundry and CI/CD."
+   npm run next-stage -- stage-10-deploy-cicd stage-11-ias-ams "ACME Procurement - stage 11: ..."
    npm install                 # links the new workspace and updates package-lock.json
    ```
-   The script skips `node_modules`, `gen/` and archives, and renames the package
-   (`procurement-stage-10`) and the stage name in its header; local credential files
-   (`default-env.json`, `.env`, `.cdsrc-private.json`) are not copied.
-4. **Implement** the files from the spec. Prefer `cds add <facet>` where a facet exists, then adapt.
-   Prefer CDS-native features over code ([CAP-AGENT] rule 6). No secrets, no real URLs - use
-   environment variables / git-ignored `default-env.json` / `.env`.
-5. **Give every new file a header** with `What:`, `Why:` and `If missing ...:` (see
-   [Conventions](#9-conventions)).
-6. **Write tests for each acceptance check** in `test/*.test.js`, then:
+   The script skips `node_modules`, `gen/`, archives, local databases, logs and credential files
+   (`default-env.json`, `.env*`, `.cdsrc-private.json`), renames the package and the stage name in
+   its header, and refuses paths outside the repository.
+4. **Implement** the files from the spec. Prefer `cds add <facet>`, then adapt. Prefer CDS-native
+   features over code ([CAP-AGENT] rule 6). No secrets, no real URLs.
+5. **Give every new file a header** with `What:`, `Why:` and `If missing ...:` ([Conventions](#9-conventions)).
+6. **Write tests for each acceptance check** and keep the guardrail tests green:
    ```sh
-   npm test -w stage-10-deploy-cicd
+   npm test -w stage-11-ias-ams
    ```
-7. **Document**: rewrite the copied `README.md` with all 13 template sections ([CAP-S08]) incl. at
-   least one mermaid diagram; rewrite `CHANGELOG-STAGE.md` against the previous stage
-   (`git diff --no-index --stat stage-09-extensibility-mtx stage-10-deploy-cicd`); update
-   `test/requests.http`.
-8. **UI stages**: capture screenshots to `docs/images/<folder>-<view>.png` (see [docs/README.md](docs/README.md)).
-9. **Check the Definition of Done** ([CAP-S09]):
+7. **Document**: README with all 13 template sections ([CAP-S08]) and a mermaid diagram,
+   `CHANGELOG-STAGE.md` against the previous stage (`git diff --no-index --stat <prev> <new>`),
+   `test/requests.http`; for UI stages screenshots `docs/images/<folder>-<view>.png`
+   ([docs/README.md](docs/README.md)).
+8. **Check security** - walk through [docs/security-guardrails.md](docs/security-guardrails.md) for
+   the new features (authorization of every new entity/action, input limits, privacy annotations).
+9. **Check the Definition of Done** ([CAP-S09]) - `--only` fails on an unknown folder:
    ```sh
    npm run lint
-   npm run dod -- --only stage-10-deploy-cicd
+   npm run dod -- --only stage-11-ias-ams
    ```
-   All columns must be ✅ (or *n/a*).
-10. **Update this README** (status table, learning path) and commit one stage per commit:
-    ```sh
-    git add -A && git commit -m "Stage 10: MTA deployment and CI/CD"
-    ```
+10. **Update this README** (status table, learning path) and commit one stage per commit.
 
 ---
 
@@ -499,7 +463,7 @@ The same loop for every stage ([CAP-S15] step 2). Example: stage 10 (the next pe
 
 | Convention | Rule | Checked by |
 |------------|------|------------|
-| File headers | every file starts with a comment containing `What:`, `Why:`, `If missing or unlinked:` (JSON: a `"//"` array; exceptions: CSV data, lock files, `.nvmrc`, `xs-security.json`, the master guide) | `npm run lint` (`scripts/check-file-headers.js`) |
+| File headers | every file starts with a comment containing `What:`, `Why:`, `If missing or unlinked:` (JSON: a `"//"` array; exceptions - strict formats that reject extra keys: CSV data, lock files, `.nvmrc`, `xs-security.json`, `xs-app.json`, `.hdiconfig`, `undeploy.json`, `event-mesh.json`, the master guide; listed with reasons in `scripts/check-file-headers.js`) | `npm run lint` (`scripts/check-file-headers.js`) |
 | README template | 13 sections: Purpose, Module reference, Prerequisites, Folder structure, How to run, How to test, Key concepts, When to use / When not to use, Impact & trade-offs, Visuals, Deviations from guide, Troubleshooting, References | `npm run dod` |
 | CHANGELOG-STAGE.md | per stage, table file → change → why | `npm run dod` |
 | IDs | reference `[CAP-Mxx]`, `[CAP-DEC-xx]`, `[CAP-STAGE-xx]` from the master guide in headers and READMEs | review |

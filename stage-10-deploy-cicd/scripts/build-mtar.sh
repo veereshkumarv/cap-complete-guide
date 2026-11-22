@@ -12,14 +12,17 @@
 set -eu
 STAGE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$STAGE_DIR/mta_archives"
-WORK="$(mktemp -d)"
-trap 'rm -rf "$WORK"' EXIT
+TMP_ROOT="$(mktemp -d)"
+trap 'rm -rf "$TMP_ROOT"' EXIT
+WORK="$TMP_ROOT/app"
 
 # copy without dependencies, build output, local databases and local credentials
+# (via a file, not a pipe: POSIX sh has no pipefail, a failing first tar would go unnoticed)
 tar -C "$STAGE_DIR" \
   --exclude=node_modules --exclude=gen --exclude=mta_archives --exclude=dist \
-  --exclude='*.sqlite*' --exclude=default-env.json --exclude=.cdsrc-private.json --exclude=.env \
-  -cf - . | tar -C "$WORK" -xf -
+  --exclude='*.sqlite*' --exclude=default-env.json --exclude=.cdsrc-private.json --exclude='.env*' \
+  -cf "$TMP_ROOT/app.tar" .
+mkdir -p "$WORK" && tar -C "$WORK" -xf "$TMP_ROOT/app.tar"
 
 cd "$WORK"
 [ -f package-lock.json ] || npm install --package-lock-only --ignore-scripts --no-audit --no-fund

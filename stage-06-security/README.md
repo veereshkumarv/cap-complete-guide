@@ -88,7 +88,7 @@ follows in stage 10.
 npm test
 ```
 
-47 tests pass (6 files). `test/authz.test.js` is the role × operation matrix:
+58 tests pass (7 files). `test/guardrails.test.js` (11 tests) holds the regression tests of the [security and code review](../docs/security-guardrails.md). `test/authz.test.js` is the role × operation matrix:
 
 | Operation | Requester (own) | Requester (other) | Approver | Buyer | Admin | Auditor | anonymous |
 |-----------|:-:|:-:|:-:|:-:|:-:|:-:|:-:|

@@ -20,3 +20,4 @@ Compare: `git diff --no-index stage-06-security stage-07-data-persistence`
 | `test/requests.http` | extended | requests 25-28 (search, paging) |
 | `../scripts/check-file-headers.js` | changed | `.hdiconfig` exempt from headers (strict JSON) |
 | `../scripts/copy-stage.js` | changed | never copies `default-env.json`, `.cdsrc-private.json`, `.env` to the next stage |
+| `test/guardrails.test.js` and the files it covers | added / fixed later | 11 regression tests for the fixes of the [security and code review](../docs/security-guardrails.md) (applied to every stage where the code exists) |

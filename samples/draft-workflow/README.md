@@ -38,7 +38,7 @@ draft-workflow/
 ├─ app/_i18n/i18n.properties         # annotation labels
 ├─ app/expenses/annotations.cds      # list, object page, side effects, action availability
 ├─ app/expenses/webapp/              # index.html, Component.js, manifest.json, i18n
-└─ test/draft-workflow.test.js       # 8 tests
+└─ test/draft-workflow.test.js       # 10 tests
 ```
 
 ## How to run
@@ -62,7 +62,7 @@ change an amount → the **Total** in the header changes immediately (no save) �
 npm test
 ```
 
-8 tests pass: live total while adding, changing and deleting draft items; activation; validation of
+10 tests pass: live total while adding, changing and deleting draft items; activation; validation of
 `@assert.range` on save; submit/approve/reject incl. 409 on invalid transitions, 400 without items
 or reason; actions refused on drafts; `@readonly` status ignored in a PATCH; app and annotations in
 `$metadata`.

@@ -51,7 +51,7 @@ final-app/
 ├─ scripts/                # subscribe.sh (local tenants), build-mtar.sh, deploy.sh
 ├─ docs/runbook.md         # operations
 ├─ .github/workflows/      # test, deploy, release pipelines (active when this folder is its own repo)
-└─ test/                   # 90 tests + requests.http + perf benchmark
+└─ test/                   # 108 tests + requests.http + perf benchmark
 ```
 
 ## How to run
@@ -84,7 +84,7 @@ npm run deploy                        # STRATEGY=blue-green npm run deploy for z
 ## How to test
 
 ```sh
-npm test            # 90 tests: logic, actions, authorization, UI annotations, persistence, plugins, outbox, MTX, deployment
+npm test            # 108 tests (incl. 17 guardrail regression tests): logic, actions, authorization, UI annotations, persistence, plugins, outbox, MTX, deployment
 npm run perf        # query timings on 20,000 orders
 npx cds lint .
 ```

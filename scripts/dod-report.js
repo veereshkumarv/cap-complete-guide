@@ -18,7 +18,12 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const args = process.argv.slice(2);
 const skipTests = args.includes('--skip-tests');
-const only = args.includes('--only') ? args[args.indexOf('--only') + 1] : undefined;
+const onlyIndex = args.indexOf('--only');
+if (onlyIndex >= 0 && !args[onlyIndex + 1]) {
+  console.error('--only needs a folder, e.g. --only stage-05-fiori-elements');
+  process.exit(2);
+}
+const only = onlyIndex >= 0 ? args[onlyIndex + 1].replace(/\/+$/, '') : undefined; // tolerate a trailing slash
 
 /** README headings required by the template in [CAP-S08]. */
 const README_SECTIONS = [
@@ -32,12 +37,17 @@ const UI_FOLDERS = /^(stage-0[5-9]|stage-10|final-app|samples\/(draft-workflow|c
 const SECRET_PATTERNS = [
   /-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----/,
   /\bAKIA[0-9A-Z]{16}\b/,
-  /"(clientsecret|client_secret)"\s*:\s*"[^"$<{][^"]{5,}"/i,
+  /"(clientsecret|client_secret|password)"\s*:\s*"[^"$<{][^"]{5,}"/i, // JSON (empty dev passwords are fine)
+  /^\s*(clientsecret|client_secret|password)\s*:\s*['"]?[^\s'"$<{][^\s'"]{5,}/im, // YAML
+  /^[A-Z0-9_]*(CLIENTSECRET|PASSWORD|SECRET)[A-Z0-9_]*\s*=\s*\S{6,}/m, // .env / shell
 ];
-const SKIP_DIRS = new Set(['node_modules', 'gen', 'mta_archives', '.git', 'resources', 'coverage']);
 
 const folders = await workspaceFolders();
 const rows = [];
+if (only && !folders.includes(only)) {
+  console.error(`--only ${only}: no such stage, sample or final-app folder (known: ${folders.join(', ')})`);
+  process.exit(2);
+}
 for (const folder of folders) {
   if (only && folder !== only) continue;
   console.log(`Checking ${folder} ...`);
@@ -187,16 +197,11 @@ async function workspaceFolders() {
   return out;
 }
 
-/** @param {string} dir @param {string} [rel] @returns {Promise<string[]>} */
-async function files(dir, rel = '') {
-  const out = [];
-  for (const e of await readdir(path.join(dir, rel), { withFileTypes: true })) {
-    if (SKIP_DIRS.has(e.name)) continue;
-    const p = path.join(rel, e.name);
-    if (e.isDirectory()) out.push(...(await files(dir, p)));
-    else if (!/\.(png|jpe?g|mtar|zip|sqlite|db)$/i.test(e.name)) out.push(p);
-  }
-  return out;
+/** Files of a folder that git would commit (tracked or untracked, not ignored). @param {string} dir */
+async function files(dir) {
+  const { execFileSync } = await import('node:child_process');
+  return execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard'], { cwd: dir, encoding: 'utf8' })
+    .split('\n').filter((f) => f && !/\.(png|jpe?g|mtar|zip|sqlite|db)$/i.test(f));
 }
 
 /** @param {string} file */

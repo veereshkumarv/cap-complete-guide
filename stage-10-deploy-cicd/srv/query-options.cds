@@ -19,3 +19,6 @@ annotate ProcurementService.Suppliers      with @cds.search: { name };
 annotate ProcurementService.Products       with @cds.search: { name, descr };
 annotate AdminService.Suppliers            with @cds.search: { name };
 annotate AdminService.Products             with @cds.search: { name, descr };
+
+// Remote data: every page is a call to S/4HANA - smaller pages than for local data (S/4 review M4).
+annotate ProcurementService.RemoteSuppliers with @cds.query.limit: { default: 20, max: 50 };

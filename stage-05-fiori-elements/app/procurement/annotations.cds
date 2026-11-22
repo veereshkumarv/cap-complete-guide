@@ -106,20 +106,21 @@ annotate service.Suppliers with {
   name @title: '{i18n>SupplierName}';
 };
 
-// Status buttons are enabled only in the status where the transition is allowed (srv/lib/status.js),
-// and every action refreshes the status, its colour, the header and the approval history.
+// Status buttons are enabled only in the status where the transition is allowed (srv/lib/status.js)
+// and only on the saved order - not inside an open draft, where the service answers 409. Every
+// action refreshes the status, its colour and the approval history.
 annotate service.PurchaseOrders actions {
-  submit  @Core.OperationAvailable: ($self.status = 'Draft')
+  submit  @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Draft' ] }, { $Path: 'in/IsActiveEntity' } ] } }
           @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality' ] };
-  approve @Core.OperationAvailable: ($self.status = 'Submitted')
+  approve @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Submitted' ] }, { $Path: 'in/IsActiveEntity' } ] } }
           @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality' ], TargetEntities: [ 'in/approvals' ] }
           (comment @title: '{i18n>Comment}' @UI.MultiLineText);
-  reject  @Core.OperationAvailable: ($self.status = 'Submitted')
+  reject  @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Submitted' ] }, { $Path: 'in/IsActiveEntity' } ] } }
           @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality' ], TargetEntities: [ 'in/approvals' ] }
           (comment @title: '{i18n>Comment}' @UI.MultiLineText @mandatory);
-  send    @Core.OperationAvailable: ($self.status = 'Approved')
+  send    @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Approved' ] }, { $Path: 'in/IsActiveEntity' } ] } }
           @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality' ] };
-  reopen  @Core.OperationAvailable: ($self.status = 'Rejected')
+  reopen  @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Rejected' ] }, { $Path: 'in/IsActiveEntity' } ] } }
           @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality' ] };
 };
 

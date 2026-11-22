@@ -23,3 +23,4 @@ Compare: `git diff --no-index stage-08-advanced-features stage-09-extensibility-
 | `test/requests.http` | extended | requests 40-48 (subscribe, extensions, rules, isolation, unsubscribe) |
 | `.gitignore`, `../.gitignore` | changed | `*.sqlite-*` (WAL/SHM files of tenant databases) |
 | `../docs/images/stage-09-extensibility-mtx-*.png` | added | object page in tenant t1 (extended) and t2 |
+| `test/guardrails.test.js` and the files it covers | added / fixed later | 17 regression tests for the fixes of the [security and code review](../docs/security-guardrails.md) (applied to every stage where the code exists) |

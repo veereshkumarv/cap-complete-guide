@@ -25,9 +25,12 @@ annotate ProcurementService.PurchaseOrders with @(restrict: [
   { grant: 'READ',                        to: 'Auditor' }
 ]);
 
-// Items follow their order: the restriction is checked via the path to the parent.
+// Items follow their order: the restriction is checked via the path to the parent. Writes only
+// while the order is a Draft - otherwise a requester could delete items of an approved order
+// (DELETE on the active item, security review).
 annotate ProcurementService.PurchaseOrderItems with @(restrict: [
-  { grant: ['READ', 'CREATE', 'UPDATE', 'DELETE'], to: 'Requester', where: 'parent.createdBy = $user' },
+  { grant: 'READ', to: 'Requester', where: 'parent.createdBy = $user' },
+  { grant: ['CREATE', 'UPDATE', 'DELETE'], to: 'Requester', where: 'parent.createdBy = $user and parent.status = ''Draft''' },
   { grant: 'READ', to: ['Approver', 'Buyer', 'Auditor'] },
   { grant: '*',    to: 'Admin' }
 ]);

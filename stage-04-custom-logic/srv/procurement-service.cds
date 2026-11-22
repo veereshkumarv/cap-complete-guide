@@ -42,7 +42,9 @@ service ProcurementService @(path: '/odata/v4/procurement') {
 
   /** Suppliers ranked by approved and sent order value (read-only computation). */
   function topSuppliers(limit: Integer) returns array of {
-    supplier : String;
+    supplierID : UUID;
+    supplier   : String;
+    currency   : String(3);
     total    : Decimal(15, 2);
     orders   : Integer;
   };

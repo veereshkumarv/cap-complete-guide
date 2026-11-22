@@ -90,7 +90,7 @@ Reset: stop both processes and delete `db*.sqlite*`.
 npm test
 ```
 
-80 tests pass (9 files). `test/mtx.test.js` (7 tests, ~4 s) starts the sidecar and the app as
+98 tests pass (10 files). `test/guardrails.test.js` (17 tests) holds the regression tests of the [security and code review](../docs/security-guardrails.md). `test/mtx.test.js` (7 tests, ~4 s) starts the sidecar and the app as
 child processes (databases in a temp folder) and checks: one database per tenant, isolated data,
 per-tenant number ranges and change history, the extension field in t1 only, the extension rules
 (422 for a missing `x_` prefix and a non-allowlisted entity), and that only extension developers

@@ -30,9 +30,11 @@ async function replicateBusinessPartner(bpNumber) {
   }
 
   const { Suppliers } = cds.entities('acme.procurement');
-  const local = await SELECT.one.from(Suppliers).columns('ID', 'bpLastChanged').where({ bpNumber });
-  // Duplicate or out-of-order event: the local copy is already as new as S/4HANA.
-  if (local?.bpLastChanged && local.bpLastChanged >= partner.LastChangeDate) return 'unchanged';
+  const local = await SELECT.one.from(Suppliers).columns('ID', 'name', 'blocked', 'country_code', 'bpLastChanged').where({ bpNumber });
+  // Out-of-order event: S/4HANA data older than the local copy. LastChangeDate has day precision,
+  // so on the SAME day we cannot tell - re-read and compare the content instead of skipping
+  // (otherwise a block set later that day would never arrive; S/4 review H1).
+  if (local?.bpLastChanged && local.bpLastChanged > partner.LastChangeDate) return 'unchanged';
 
   const address = await bp.run(SELECT.one.from(A_BusinessPartnerAddress).columns('Country').where({ BusinessPartner: bpNumber }));
   const data = {
@@ -42,6 +44,11 @@ async function replicateBusinessPartner(bpNumber) {
     bpLastChanged: partner.LastChangeDate,
   };
   if (local) {
+    const same = local.name === data.name && !!local.blocked === data.blocked && local.country_code === data.country_code;
+    if (same) {
+      if (local.bpLastChanged !== data.bpLastChanged) await UPDATE(Suppliers, local.ID).with({ bpLastChanged: data.bpLastChanged });
+      return 'unchanged'; // duplicate event / repeated full load
+    }
     await UPDATE(Suppliers, local.ID).with(data);
     LOG.info('supplier updated from S/4HANA', { bpNumber, blocked: data.blocked });
     return 'updated';

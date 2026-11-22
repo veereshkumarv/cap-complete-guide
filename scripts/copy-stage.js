@@ -24,6 +24,13 @@ if (!from || !to) {
 }
 const src = path.join(root, from);
 const dest = path.join(root, to);
+// only folders directly inside the repository (no ../ escapes)
+for (const p of [src, dest]) {
+  if (path.dirname(p) !== root && path.dirname(path.dirname(p)) !== root) {
+    console.error(`${path.relative(root, p)} is not a folder of this repository - refusing.`);
+    process.exit(2);
+  }
+}
 try {
   await access(dest);
   console.error(`${to} already exists - refusing to overwrite.`);
@@ -32,9 +39,11 @@ try {
   // expected: target does not exist yet
 }
 
+// local databases, logs and credential variants (.env.local, ...) are never part of a stage
+const SKIP_PATTERN = /\.(mtar|sqlite|sqlite-\w+|db|log)$|^\.env\./;
 await cp(src, dest, {
   recursive: true,
-  filter: (file) => !SKIP.has(path.basename(file)) && !file.endsWith('.mtar'),
+  filter: (file) => !SKIP.has(path.basename(file)) && !SKIP_PATTERN.test(path.basename(file)),
 });
 
 const pkgFile = path.join(dest, 'package.json');

@@ -82,7 +82,7 @@ curl "http://localhost:4004/odata/v4/procurement/RemoteSuppliers?\$filter=blocke
 npm test
 ```
 
-21 tests pass (4 files). Note the test setup: `cds.test(dir, '--with-mocks')` - unlike
+30 tests pass (5 files). `test/guardrails.test.js` (9 tests) holds the regression tests of the [security and code review](../docs/security-guardrails.md). Note the test setup: `cds.test(dir, '--with-mocks')` - unlike
 `cds watch`, `cds.test` does not mock required services unless asked.
 
 ## Key concepts

@@ -97,7 +97,7 @@ npm run deploy                         # or: STRATEGY=blue-green npm run deploy
 npm test
 ```
 
-90 tests pass (10 files). `test/deployment.test.js` (10 tests) checks without BTP:
+108 tests pass (11 files). `test/guardrails.test.js` (17 tests) holds the regression tests of the [security and code review](../docs/security-guardrails.md). `test/deployment.test.js` (10 tests) checks without BTP:
 modules and their types, one BTP service per production feature (with plans), the service's
 bindings, the tenant-upgrade hook, tenant host routing, the UI5 build of the Fiori app, role
 collections = role templates, the effective production configuration, a production build into a

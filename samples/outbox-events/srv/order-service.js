@@ -23,7 +23,9 @@ module.exports = class OrderService extends cds.ApplicationService {
       if (!order) return req.reject(404, `Order ${ID} does not exist.`);
       if (order.status !== 'New') return req.reject(409, `Order is already ${order.status}.`);
 
-      await UPDATE(Orders, ID).with({ status: 'Confirmed' });
+      // conditional update: two concurrent confirms must not both emit (one message per order)
+      const changed = await UPDATE(Orders).set({ status: 'Confirmed' }).where({ ID, status: 'New' });
+      if (!changed) return req.reject(409, 'Order was confirmed concurrently.');
       await messaging.emit(ORDER_CONFIRMED, { order: ID, amount: order.amount }); // -> outbox
       await shipping.send('book', { order: ID }); // -> outbox, retried if the carrier is down
       return SELECT.one.from(Orders, ID);

@@ -25,3 +25,4 @@ Compare: `git diff --no-index stage-04-custom-logic stage-05-fiori-elements`
 | `test/requests.http` | extended | requests 15-17 (manifest, German metadata, list request) |
 | `package.json` | changed | name, description |
 | `../docs/images/stage-05-fiori-elements-*.png` | added | screenshots (list, object page, German list) |
+| `test/guardrails.test.js` and the files it covers | added / fixed later | 9 regression tests for the fixes of the [security and code review](../docs/security-guardrails.md) (applied to every stage where the code exists) |

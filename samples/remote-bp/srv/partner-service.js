@@ -42,7 +42,12 @@ module.exports = class PartnerService extends cds.ApplicationService {
 
     // ---- event-driven replication (Event Mesh in production, local messaging here)
     const messaging = await cds.connect.to('messaging');
-    messaging.on(BP_CHANGED, (msg) => this.send('replicate', { bpNumber: msg.data.BusinessPartner }));
+    // (the payload is untrusted: only a well-formed partner number is used, and the data is re-read)
+    messaging.on(BP_CHANGED, (msg) => {
+      const bpNumber = msg.data?.BusinessPartner;
+      if (!/^\d{1,10}$/.test(bpNumber ?? '')) return LOG.warn('invalid business partner event ignored');
+      return this.replicatePartner(bp, bpNumber);
+    });
 
     return super.init();
   }
@@ -61,8 +66,10 @@ module.exports = class PartnerService extends cds.ApplicationService {
     if (!partner) return 'unknown';
 
     const { Partners } = cds.entities('sample.remotebp');
-    const local = await SELECT.one.from(Partners).columns('lastChanged').where({ bpNumber });
-    if (local?.lastChanged && local.lastChanged >= partner.LastChangeDate) return 'unchanged'; // duplicate or stale
+    const local = await SELECT.one.from(Partners).columns('name', 'blocked', 'country', 'lastChanged').where({ bpNumber });
+    // stale event: S/4HANA older than the local copy. LastChangeDate has day precision - on the same
+    // day re-read and compare instead of skipping, or a block set later that day never arrives.
+    if (local?.lastChanged && local.lastChanged > partner.LastChangeDate) return 'unchanged';
 
     const address = await bp.run(SELECT.one.from(A_BusinessPartnerAddress).columns('Country').where({ BusinessPartner: bpNumber }));
     const data = {
@@ -72,6 +79,10 @@ module.exports = class PartnerService extends cds.ApplicationService {
       lastChanged: partner.LastChangeDate,
     };
     if (local) {
+      if (local.name === data.name && !!local.blocked === data.blocked && local.country === data.country) {
+        if (local.lastChanged !== data.lastChanged) await UPDATE(Partners, bpNumber).with({ lastChanged: data.lastChanged });
+        return 'unchanged'; // duplicate event / repeated full load
+      }
       await UPDATE(Partners, bpNumber).with(data);
       return 'updated';
     }

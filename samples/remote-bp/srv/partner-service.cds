@@ -9,9 +9,11 @@
 using { sample.remotebp as db } from '../db/schema';
 using { API_BUSINESS_PARTNER as bp } from './external/API_BUSINESS_PARTNER';
 
-service PartnerService @(path: '/odata/v4/partners') {
+// Every call reaches S/4HANA or writes data: login required, replication for admins only, small
+// pages for remote reads (S/4 review M6/M4).
+service PartnerService @(path: '/odata/v4/partners', requires: 'authenticated-user') {
   /** Live: every read is forwarded to S/4HANA (mocked in development). */
-  @readonly entity RemotePartners as projection on bp.A_BusinessPartner {
+  @readonly @cds.query.limit: { default: 20, max: 50 } entity RemotePartners as projection on bp.A_BusinessPartner {
     key BusinessPartner          as ID,
         BusinessPartnerFullName  as name,
         Industry                 as industry,
@@ -23,10 +25,10 @@ service PartnerService @(path: '/odata/v4/partners') {
   @readonly entity Partners as projection on db.Partners;
 
   /** Replicates one partner. Idempotent - returns created | updated | unchanged | unknown. */
-  action replicate(bpNumber : String(10)) returns String;
+  @(requires: 'admin') action replicate(bpNumber : String(10)) returns String;
 
   /** Replicates all partners (initial load / nightly job). */
-  action replicateAll() returns {
+  @(requires: 'admin') action replicateAll() returns {
     created   : Integer;
     updated   : Integer;
     unchanged : Integer;

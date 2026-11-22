@@ -19,6 +19,7 @@ const P = '/odata/v4/procurement';
 const A = '/odata/v4/admin';
 const PO1 = 'd1000000-0000-4000-8000-000000000001'; // alice, Draft
 const PO2 = 'd1000000-0000-4000-8000-000000000002'; // alice, Submitted
+const PO3 = 'd1000000-0000-4000-8000-000000000003'; // carol, Approved
 const SUPPLIER = 'a1000000-0000-4000-8000-000000000001';
 const KANTO = 'a1000000-0000-4000-8000-000000000005'; // blocked in S/4HANA, not yet locally
 const CONTACT = 'c1000000-0000-4000-8000-000000000001';
@@ -117,10 +118,10 @@ describe('Transactional outbox and idempotent consumer (stage 08)', () => {
   });
 
   it('stores the message in cds.outbox.Messages inside the transaction and delivers it after commit', async () => {
-    const ID = cds.utils.uuid();
+    const ID = PO3; // approved in the seed data, no notification yet
     const messaging = await cds.connect.to('messaging');
     await cds.tx(async (tx) => {
-      await messaging.emit(ORDER_APPROVED, { ID, orderNo: 'PO-7000001', approver: 'bob' });
+      await messaging.emit(ORDER_APPROVED, { ID, orderNo: 'PO-1000003', approver: 'bob' });
       const queued = await tx.run(SELECT.from('cds.outbox.Messages'));
       expect(queued.some((m) => m.msg.includes(ID))).to.equal(true); // persisted with the business data
       expect(await notifications(ID)).to.have.length(0); // not delivered before commit
@@ -141,12 +142,19 @@ describe('Transactional outbox and idempotent consumer (stage 08)', () => {
   });
 
   it('ignores a redelivered message (at-least-once delivery)', async () => {
-    const ID = cds.utils.uuid();
     const messaging = cds.unqueued(await cds.connect.to('messaging'));
-    const msg = { ID, orderNo: 'PO-7000003', approver: 'bob' };
+    const msg = { ID: PO2, orderNo: 'PO-1000002', approver: 'bob' }; // already delivered above
     await messaging.emit(ORDER_APPROVED, msg);
     await messaging.emit(ORDER_APPROVED, msg); // same message again
-    expect(await notifications(ID)).to.have.length(1);
+    expect(await notifications(PO2)).to.have.length(1);
+  });
+
+  it('does not trust the payload: a forged message for an order that is not approved creates nothing', async () => {
+    const messaging = cds.unqueued(await cds.connect.to('messaging'));
+    await messaging.emit(ORDER_APPROVED, { ID: PO1, orderNo: 'PO-1000001', approver: 'mallory' }); // PO1 is a Draft
+    await messaging.emit(ORDER_APPROVED, { ID: cds.utils.uuid(), orderNo: 'PO-9999999' }); // unknown order
+    expect(await notifications(PO1)).to.have.length(0);
+    expect((await SELECT.from(cds.entities('acme.procurement').Notifications)).every((n) => !/mallory|PO-9999999/.test(n.message))).to.equal(true);
   });
 });
 

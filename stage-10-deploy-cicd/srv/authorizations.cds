@@ -11,6 +11,7 @@
  */
 using { ProcurementService } from './procurement-service';
 using { AdminService } from './admin-service';
+using { sap.changelog.ChangeView } from '@cap-js/change-tracking';
 
 // ------------------------------------------------------------------ ProcurementService
 annotate ProcurementService with @(requires: 'authenticated-user');
@@ -26,9 +27,12 @@ annotate ProcurementService.PurchaseOrders with @(restrict: [
   { grant: 'READ',                        to: 'Auditor' }
 ]);
 
-// Items follow their order: the restriction is checked via the path to the parent.
+// Items follow their order: the restriction is checked via the path to the parent. Writes only
+// while the order is a Draft - otherwise a requester could delete items of an approved order
+// (DELETE on the active item, security review).
 annotate ProcurementService.PurchaseOrderItems with @(restrict: [
-  { grant: ['READ', 'CREATE', 'UPDATE', 'DELETE'], to: 'Requester', where: 'parent.createdBy = $user' },
+  { grant: 'READ', to: 'Requester', where: 'parent.createdBy = $user' },
+  { grant: ['CREATE', 'UPDATE', 'DELETE'], to: 'Requester', where: 'parent.createdBy = $user and parent.status = ''Draft''' },
   { grant: 'READ', to: ['Approver', 'Buyer', 'Auditor'] },
   { grant: '*',    to: 'Admin' }
 ]);
@@ -59,6 +63,13 @@ annotate ProcurementService.PurchaseOrders.attachments with @(restrict: [
   { grant: 'READ', to: ['Approver', 'Buyer', 'Auditor'] },
   { grant: '*',    to: 'Admin' }
 ]);
+
+// Attachment writes after submission are additionally blocked in srv/procurement-service.js
+// (the plugin's own handlers run before a status condition in @restrict could apply).
+
+// The change history reveals values and user IDs: not reachable by navigation for requesters, who
+// could otherwise read /PurchaseOrders(<other user's order>)/changes (security review).
+annotate sap.changelog.ChangeView with @(restrict: [ { grant: 'READ', to: ['Approver', 'Buyer', 'Admin', 'Auditor'] } ]);
 
 // Notifications are the buyers' work list.
 annotate ProcurementService.Notifications with @(restrict: [ { grant: 'READ', to: ['Buyer', 'Admin', 'Auditor'] } ]);

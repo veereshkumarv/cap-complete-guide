@@ -32,6 +32,17 @@ extend my.PurchaseOrders with {
   attachments : Composition of many Attachments;
 }
 
+// Upload limits (security review): the plugin defaults are 400 MB and any MIME type, which allows
+// HTML/script files that a browser might render. Only business document types, at most 10 MB.
+annotate my.PurchaseOrders.attachments with {
+  content @Validation.Maximum: '10MB'
+          @Core.AcceptableMediaTypes: [
+            'application/pdf', 'image/png', 'image/jpeg', 'text/plain', 'text/csv',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          ];
+};
+
 /** Written once per approved order by the message consumer (idempotent by key). */
 entity Notifications : managed {
   key ID        : String(60); // <order ID>:<event> - a redelivered message hits the same key

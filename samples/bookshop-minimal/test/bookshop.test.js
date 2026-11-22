@@ -37,4 +37,9 @@ describe('bookshop-minimal', () => {
     const err = await fail(POST('/odata/v4/admin/Books', { title: 'Too many', author_ID: 'aa000000-0000-4000-8000-000000000001', stock: -1 }));
     expect(err.status).to.equal(400);
   });
+
+  it('rejects a book whose author does not exist (@assert.target)', async () => {
+    const err = await POST('/odata/v4/admin/Books', { title: 'Orphan', author_ID: '00000000-0000-4000-8000-0000000000ff' }).catch((e) => e);
+    expect(err.status).to.equal(400);
+  });
 });

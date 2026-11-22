@@ -87,6 +87,9 @@ modules:
       memory: 256M
     properties:
       TENANT_HOST_PATTERN: "^(.*)-${default-uri}"
+      # security headers for every response (security review): no framing, no MIME sniffing, HSTS
+      httpHeaders: '[{"X-Frame-Options": "DENY"}, {"X-Content-Type-Options": "nosniff"}, {"Strict-Transport-Security": "max-age=31536000; includeSubDomains"}, {"Referrer-Policy": "same-origin"}]'
+      SESSION_TIMEOUT: 30
     requires:
       - name: srv-api
         group: destinations

@@ -28,10 +28,11 @@ Compare: `git diff --no-index stage-07-data-persistence stage-08-advanced-featur
 | `srv/authorizations.cds` | changed | rules for attachments, notifications, `replicateSuppliers` |
 | `app/procurement/annotations.cds`, `app/_i18n/*` | changed | `blocked` column in the supplier value help; labels |
 | `_i18n/messages*.properties` | changed | `ORDER_DRAFT_ONLY`, `SUPPLIER_BLOCKED` (en, de) |
-| `test/advanced.test.js` | added | 18 tests: change tracking, attachments, audit log, outbox, idempotency, replication, robustness, telemetry |
+| `test/advanced.test.js` | added | 19 tests: change tracking, attachments, audit log, outbox, idempotency, replication, robustness, telemetry |
 | `test/handlers.test.js` | changed | direct creation of active orders is rejected (was: total computed) |
 | `test/perf/queries.bench.js` | changed | lint exception for the timing table |
 | `test/requests.http` | extended | requests 29-39 |
 | `../docs/images/stage-08-advanced-features-*.png` | added | Change History + Attachments screenshot |
 | `../scripts/check-file-headers.js` | changed | `undeploy.json` exempt (plain JSON array) |
 | all stages 02-08: `db/data/acme.procurement-PurchaseOrders.csv`, `test/actions.test.js` | fixed | seed total of PO-1000001 was 1309.70, its items sum to 1308.60 (found via the Change History) |
+| `test/guardrails.test.js` and the files it covers | added / fixed later | 17 regression tests for the fixes of the [security and code review](../docs/security-guardrails.md) (applied to every stage where the code exists) |

@@ -46,6 +46,13 @@ module.exports = class ExpenseService extends cds.ApplicationService {
       for (const row of [rows].flat()) if (row?.status) row.statusCriticality = CRITICALITY[row.status];
     });
 
+    // ---- only drafts can be edited: approved or submitted reports are frozen (review S2 - otherwise
+    // Edit -> change an amount -> Save changed an approved report)
+    this.before('EDIT', ExpenseReports, async (req) => {
+      const report = await SELECT.one.from(ExpenseReports).columns('status').where({ ID: req.params?.[0]?.ID ?? req.data.ID });
+      if (report && report.status !== 'Draft') return req.reject(409, `The report is ${report.status} and can no longer be edited.`);
+    });
+
     // ---- state machine
     for (const action of Object.keys(TRANSITIONS)) {
       this.on(action, ExpenseReports, (req) => this.transition(action, req));
@@ -61,12 +68,18 @@ module.exports = class ExpenseService extends cds.ApplicationService {
     if (!report) return req.reject(404, `Expense report ${ID} does not exist.`);
     const { from, to } = TRANSITIONS[action];
     if (report.status !== from) return req.reject(409, `The report is ${report.status}; "${action}" is only allowed when it is ${from}.`);
+    // an open edit draft would overwrite the new status when it is saved (review S1)
+    if (await SELECT.one.from(ExpenseReports.drafts).columns('ID').where({ ID })) {
+      return req.reject(409, 'The report is being edited. Save or discard the draft first.');
+    }
     if (action === 'submit') {
       const { n } = await SELECT.one.from(ExpenseItems).columns('count(1) as n').where({ report_ID: ID });
       if (!n) return req.reject(400, 'Add at least one expense before submitting.', 'items');
     }
     if (action === 'reject' && !req.data.reason?.trim()) return req.reject(400, 'Enter a reason for the rejection.', 'reason');
-    await UPDATE(ExpenseReports, ID).with({ status: to, reason: action === 'reject' ? req.data.reason : null });
+    // conditional update: a concurrent decision that changed the status first makes this one fail
+    const changed = await UPDATE(ExpenseReports).set({ status: to, reason: action === 'reject' ? req.data.reason : null }).where({ ID, status: from });
+    if (!changed) return req.reject(409, 'The report was changed concurrently. Reload and try again.');
     return this.run(SELECT.one.from(ExpenseReports).where({ ID, IsActiveEntity: true }));
   }
 };

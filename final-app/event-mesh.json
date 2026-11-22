@@ -13,7 +13,8 @@
         "${namespace}/*"
       ],
       "subscribeFilter": [
-        "*"
+        "${namespace}/*",
+        "sap/S4HANAOD/*"
       ]
     },
     "queueRules": {

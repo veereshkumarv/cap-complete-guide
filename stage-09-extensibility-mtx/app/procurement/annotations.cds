@@ -112,21 +112,22 @@ annotate service.Suppliers with {
   blocked @title: '{i18n>Blocked}';
 };
 
-// Status buttons are enabled only in the status where the transition is allowed (srv/lib/status.js),
-// and every action refreshes the status, its colour, the header and the approval history.
+// Status buttons are enabled only in the status where the transition is allowed (srv/lib/status.js)
+// and only on the saved order - not inside an open draft, where the service answers 409. Every
+// action refreshes the status, its colour, the Edit/Delete hint and the approval history.
 annotate service.PurchaseOrders actions {
-  submit  @Core.OperationAvailable: ($self.status = 'Draft')
-          @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality' ] };
-  approve @Core.OperationAvailable: ($self.status = 'Submitted')
-          @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality' ], TargetEntities: [ 'in/approvals' ] }
+  submit  @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Draft' ] }, { $Path: 'in/IsActiveEntity' } ] } }
+          @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality', 'in/canEdit' ] };
+  approve @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Submitted' ] }, { $Path: 'in/IsActiveEntity' } ] } }
+          @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality', 'in/canEdit' ], TargetEntities: [ 'in/approvals' ] }
           (comment @title: '{i18n>Comment}' @UI.MultiLineText);
-  reject  @Core.OperationAvailable: ($self.status = 'Submitted')
-          @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality' ], TargetEntities: [ 'in/approvals' ] }
+  reject  @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Submitted' ] }, { $Path: 'in/IsActiveEntity' } ] } }
+          @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality', 'in/canEdit' ], TargetEntities: [ 'in/approvals' ] }
           (comment @title: '{i18n>Comment}' @UI.MultiLineText @mandatory);
-  send    @Core.OperationAvailable: ($self.status = 'Approved')
-          @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality' ] };
-  reopen  @Core.OperationAvailable: ($self.status = 'Rejected')
-          @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality' ] };
+  send    @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Approved' ] }, { $Path: 'in/IsActiveEntity' } ] } }
+          @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality', 'in/canEdit' ] };
+  reopen  @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Rejected' ] }, { $Path: 'in/IsActiveEntity' } ] } }
+          @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality', 'in/canEdit' ] };
 };
 
 // ------------------------------------------------------------------ items table

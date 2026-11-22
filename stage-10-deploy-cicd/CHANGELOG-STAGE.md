@@ -28,3 +28,4 @@ Compare: `git diff --no-index stage-09-extensibility-mtx stage-10-deploy-cicd`
 | `ext-sample/package.json`, `srv/extension.cds` | changed | extends `procurement-stage-10` |
 | `.gitignore` | changed | `dist/` (UI5 build output) |
 | `../scripts/check-file-headers.js` | changed | `event-mesh.json` exempt (broker parameters) |
+| `test/guardrails.test.js` and the files it covers | added / fixed later | 17 regression tests for the fixes of the [security and code review](../docs/security-guardrails.md) (applied to every stage where the code exists) |

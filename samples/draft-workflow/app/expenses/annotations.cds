@@ -24,6 +24,9 @@ annotate service.ExpenseItems with {
 };
 
 annotate service.ExpenseReports with @(
+  // Edit/Delete only for drafts - mirrors the EDIT guard in srv/expense-service.js
+  UI.UpdateHidden    : { $edmJson: { $Ne: [ { $Path: 'status' }, 'Draft' ] } },
+  UI.DeleteHidden    : { $edmJson: { $Ne: [ { $Path: 'status' }, 'Draft' ] } },
   UI.HeaderInfo      : { TypeName: '{i18n>Report}', TypeNamePlural: '{i18n>Reports}', Title: { Value: title }, Description: { Value: status } },
   UI.SelectionFields : [ status ],
   UI.LineItem        : [
@@ -60,11 +63,11 @@ annotate service.ExpenseItems with @(
 );
 
 annotate service.ExpenseReports actions {
-  submit  @Core.OperationAvailable: ($self.status = 'Draft')
+  submit  @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Draft' ] }, { $Path: 'in/IsActiveEntity' } ] } }
           @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality' ] };
-  approve @Core.OperationAvailable: ($self.status = 'Submitted')
+  approve @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Submitted' ] }, { $Path: 'in/IsActiveEntity' } ] } }
           @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality' ] };
-  reject  @Core.OperationAvailable: ($self.status = 'Submitted')
+  reject  @Core.OperationAvailable: { $edmJson: { $And: [ { $Eq: [ { $Path: 'in/status' }, 'Submitted' ] }, { $Path: 'in/IsActiveEntity' } ] } }
           @Common.SideEffects: { TargetProperties: [ 'in/status', 'in/statusCriticality', 'in/reason' ] }
           (reason @title: '{i18n>Reason}' @mandatory);
 };

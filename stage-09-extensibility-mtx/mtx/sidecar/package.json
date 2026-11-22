@@ -16,7 +16,7 @@
     "@cap-js/sqlite": "^3"
   },
   "engines": {
-    "node": "^24"
+    "node": "^22 || ^24"
   },
   "scripts": {
     "start": "cds-serve"
@@ -48,7 +48,8 @@
             "new-entities": 0
           }
         ]
-      }
+      },
+      "destinations": true
     }
   }
 }

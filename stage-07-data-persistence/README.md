@@ -104,7 +104,7 @@ Deploying to HANA and running against it (*manual*, needs BTP): see
 npm test
 ```
 
-55 tests pass (7 files). `test/persistence.test.js` (8 tests) checks search, paging, that the
+66 tests pass (8 files). `test/guardrails.test.js` (11 tests) holds the regression tests of the [security and code review](../docs/security-guardrails.md). `test/persistence.test.js` (8 tests) checks search, paging, that the
 production profile uses HANA, and runs `cds build --production` (writes `gen/`, ~5 s) to verify the
 HDI module: tables, views, draft tables, CSV data, the native index with its `.hdiconfig`, the
 deployer `package.json` and `@cap-js/hana` in `gen/srv`.

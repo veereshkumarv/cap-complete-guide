@@ -61,4 +61,5 @@ describe('Documents with media content', () => {
     const res = await GET(`${P}/Documents(${doc.ID})/content`);
     expect(String(res.data)).to.equal('Quote: 4 office chairs');
   });
+
 });

@@ -84,7 +84,7 @@ The browser asks for credentials when an action needs a user; mocked users are `
 npm test
 ```
 
-26 tests pass (5 files). `test/ui.test.js` needs no browser: it checks that the app files are
+35 tests pass (6 files). `test/guardrails.test.js` (9 tests) holds the regression tests of the [security and code review](../docs/security-guardrails.md). `test/ui.test.js` needs no browser: it checks that the app files are
 served, that `$metadata` contains the UI annotations with translated labels, that every status gets
 the right colour, and runs "create draft → add item → activate → submit" through the same OData
 requests the app sends.

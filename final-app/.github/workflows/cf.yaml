@@ -28,7 +28,10 @@ concurrency:
 env:
   APP_NAME: acme-procurement
 jobs:
+  tests:
+    uses: ./.github/workflows/test.yaml
   deploy:
+    needs: [tests] # never deploy an untested commit (security review)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5

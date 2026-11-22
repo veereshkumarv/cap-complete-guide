@@ -65,7 +65,7 @@ stage-08-advanced-features/
 ├─ app/procurement/annotations.cds       # CHANGED "blocked" in the supplier value help
 ├─ _i18n/messages*.properties            # CHANGED ORDER_DRAFT_ONLY, SUPPLIER_BLOCKED
 ├─ package.json                          # CHANGED 4 plugins, messaging (local + outbox / Event Mesh)
-├─ test/advanced.test.js                 # NEW 18 tests for all features
+├─ test/advanced.test.js                 # NEW 19 tests for all features
 ├─ test/handlers.test.js                 # CHANGED direct create is now rejected
 └─ test/requests.http                    # CHANGED requests 29-39
 ```
@@ -99,7 +99,7 @@ Or run requests 29-39 of `test/requests.http`. Things to watch in the server log
 npm test
 ```
 
-73 tests pass (8 files). `test/advanced.test.js` (18 tests) covers:
+91 tests pass (9 files). `test/guardrails.test.js` (17 tests) holds the regression tests of the [security and code review](../docs/security-guardrails.md). `test/advanced.test.js` (19 tests) covers:
 
 | Feature | What is proven |
 |---------|----------------|

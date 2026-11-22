@@ -51,7 +51,7 @@ saves it as `quote.txt` because of `Content-Disposition: attachment`.
 npm test
 ```
 
-7 tests pass: upload, download headers, stored size and no bytes in JSON, 415 for a wrong type,
+10 tests pass (2 files): upload, download headers, stored size and no bytes in JSON, 415 for a wrong type,
 413 for a large file with and without `Content-Length`, previous file kept after a rejection.
 
 ## Key concepts

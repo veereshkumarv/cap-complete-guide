@@ -55,7 +55,7 @@ Then run `test/requests.http` (1-5), e.g. `POST /odata/v4/partners/replicateAll`
 npm test
 ```
 
-7 tests pass: delegation with `$filter`/`$select`, full load counts, idempotent second load,
+9 tests pass (2 files, incl. `test/guardrails.test.js`: login/admin required, same-day replication): delegation with `$filter`/`$select`, full load counts, idempotent second load,
 unknown partner, event replication with duplicate and stale events, and 502 for live reads while
 the replicated copy keeps working when S/4HANA is down.
 

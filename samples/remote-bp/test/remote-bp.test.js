@@ -10,7 +10,9 @@
 const { describe, it, before } = require('node:test');
 const cds = require('@sap/cds');
 
-const { GET, POST, expect } = cds.test(`${__dirname}/..`, '--with-mocks'); // mock API_BUSINESS_PARTNER like cds watch
+const test = cds.test(`${__dirname}/..`, '--with-mocks'); // mock API_BUSINESS_PARTNER like cds watch
+const { GET, POST, expect } = test;
+test.defaults.auth = { username: 'alice', password: '' }; // CAP's default mocked user with role admin
 
 const P = '/odata/v4/partners';
 const BP_CHANGED = 'sap.s4.beh.businesspartner.v1.BusinessPartner.Changed.v1';

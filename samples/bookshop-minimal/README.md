@@ -34,7 +34,7 @@ bookshop-minimal/
 ├─ db/schema.cds                         # Authors, Books
 ├─ db/data/sample.bookshop-*.csv         # 2 authors, 3 books (file name = <namespace>-<Entity>.csv)
 ├─ srv/services.cds                      # CatalogService (read-only), AdminService
-└─ test/bookshop.test.js                 # 5 tests
+└─ test/bookshop.test.js                 # 6 tests
 ```
 
 ## How to run
@@ -48,7 +48,7 @@ curl "http://localhost:4004/odata/v4/catalog/Books?\$expand=author"
 ## How to test
 
 ```sh
-npm test      # 5 tests pass
+npm test      # 6 tests pass
 ```
 
 ## Key concepts

@@ -17,6 +17,7 @@ permissions:
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30 # the MTX end-to-end tests spawn processes - never hang for hours
     strategy:
       fail-fast: false
       matrix:
